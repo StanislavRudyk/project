@@ -3,7 +3,4 @@
         <PackageReference Include="Swashbuckle.AspNetCore" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     </ItemGroup>
-
-    <ItemGroup>
-    </ItemGroup>
 </Project>
