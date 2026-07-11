@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BookShare.Core/BookShare.Core.csproj" />
+  <Project Path="BookShare.Domain/BookShare.Domain.csproj" />
+  <Project Path="BookShare.Infrastructure.Postgres/BookShare.Infrastructure.Postgres.csproj" />
+  <Project Path="BookShare.Infrastructure.Storage/BookShare.Infrastructure.Storage.csproj" />
+</Solution>
