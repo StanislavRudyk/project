@@ -1,4 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
     <ItemGroup>
+      <Folder Include="Repository\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BookShare.Domain\BookShare.Domain.csproj" />
     </ItemGroup>
 </Project>

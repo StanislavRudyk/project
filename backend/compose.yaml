@@ -1,0 +1,29 @@
+﻿services:
+  database:
+    container_name: database-book-shared
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: bookshare_db
+    ports:
+      - "8001:5432" 
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    
+    
+    
+  pgadmin:
+    container_name: pgadmin-book-shared
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@bookshare.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+volumes:
+  pgdata:

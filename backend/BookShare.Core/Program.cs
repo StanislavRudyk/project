@@ -3,7 +3,8 @@ using BookShare.Core.Extentions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder
-    .AddApplicationServices();
+    .AddApplicationServices()
+    .AddDatabase();
 
 var app = builder.Build();
 

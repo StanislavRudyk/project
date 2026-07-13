@@ -1,5 +1,8 @@
 using System.Text.Json;
 using BookShare.Core.EndpointSettings;
+using BookShare.Core.Settings;
+using BookShare.Infrastructure.Postgres.DatabaseSettings;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
 namespace BookShare.Core.Extentions;
@@ -48,7 +51,24 @@ public static class BuilderExtention
 
         return builder;
     }
+    
+    public static WebApplicationBuilder AddDatabase(this WebApplicationBuilder builder)
+    {
+        var databaseSettings = builder.Configuration
+            .GetSection(DatabaseOptions.SectionName)
+            .Get<DatabaseOptions>();
 
+        if (string.IsNullOrEmpty(databaseSettings?.ConnectionString))
+        {
+            throw new InvalidOperationException($"Configuration section '{DatabaseOptions.SectionName}' is missing or incomplete.");
+        }
+
+        builder.Services.AddDbContext<DataContext>(options =>
+            options.UseNpgsql(databaseSettings.ConnectionString));
+
+        return builder;
+    }
+    
     // public static WebApplicationBuilder AddDependencyInjection(this WebApplicationBuilder builder)
     // {
     //     return builder;

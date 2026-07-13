@@ -1,6 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+      <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Swashbuckle.AspNetCore" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="BCrypt.Net-Next" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Endpoints\Auth\Registration\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\BookShare.Infrastructure.Postgres\BookShare.Infrastructure.Postgres.csproj" />
     </ItemGroup>
 </Project>
