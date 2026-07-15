@@ -9,8 +9,17 @@ public sealed class User
     public string PasswordHash { get; private set; }
     public Email? Email { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    
-    public UserModel(Guid id, UserName userName, string passwordHash, Email? email, DateTime createdAt)
+
+    private User()
+    {
+    }
+
+    private User(
+        Guid id,
+        UserName userName,
+        string passwordHash,
+        Email? email,
+        DateTime createdAt)
     {
         Id = id;
         UserName = userName;
@@ -18,9 +27,27 @@ public sealed class User
         Email = email;
         CreatedAt = createdAt;
     }
-    
-    public void ChangeEmail(Email newEmail)
+
+    public static User Create(
+        UserName userName,
+        string passwordHash,
+        Email? email)
     {
-        Email = newEmail;
+        return new User(
+            Guid.NewGuid(),
+            userName,
+            passwordHash,
+            email,
+            DateTime.UtcNow);
+    }
+
+    public void ChangeEmail(Email? email)
+    {
+        Email = email;
+    }
+
+    public void ChangePassword(string passwordHash)
+    {
+        PasswordHash = passwordHash;
     }
 }

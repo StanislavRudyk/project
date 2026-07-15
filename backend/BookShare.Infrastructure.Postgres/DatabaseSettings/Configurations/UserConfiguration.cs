@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookShare.Infrastructure.Postgres.DatabaseSettings.Configurations;
 
-public sealed class UserConfiguration : IEntityTypeConfiguration<UserModel>
+public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<UserModel> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("users");
         builder.HasKey(x => x.Id);
         
         builder.Property(x => x.Email)
             .HasConversion(
-                email => email.Value,
-                value => Email.Create(value))
-            .IsRequired();
+                email => email.HasValue ? email.Value.Value : null,
+                value => value == null ? (Email?)null : Email.Create(value))
+            .IsRequired(false);
         
         builder.Property(x => x.UserName)
             .HasConversion(
@@ -25,6 +25,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserModel>
             .IsRequired();
         
         builder.Property(x => x.PasswordHash).IsRequired();
-        builder.Property(x => x.CreateAt).IsRequired();
+        builder.Property(x => x.CreatedAt).IsRequired();
     }
 }

@@ -5,7 +5,7 @@ namespace BookShare.Infrastructure.Postgres.DatabaseSettings;
 
 public sealed class DataContext : DbContext
 {
-    public DbSet<UserModel> Users => Set<UserModel>();
+    public DbSet<User> Users => Set<User>();
     
     public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
