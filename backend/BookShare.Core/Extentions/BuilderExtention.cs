@@ -1,7 +1,12 @@
 using System.Text.Json;
+using BookShare.Core.Endpoints.Auth.Registration;
 using BookShare.Core.EndpointSettings;
 using BookShare.Core.Settings;
+using BookShare.Domain.Abstractions;
 using BookShare.Infrastructure.Postgres.DatabaseSettings;
+using BookShare.Infrastructure.Postgres.Repository;
+using BookShare.Infrastructure.Security;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -69,10 +74,15 @@ public static class BuilderExtention
         return builder;
     }
     
-    // public static WebApplicationBuilder AddDependencyInjection(this WebApplicationBuilder builder)
-    // {
-    //     return builder;
-    // }
+    public static WebApplicationBuilder AddDependencyInjection(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<RegistrationHandler>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+        builder.Services.AddScoped<DbContext, DataContext>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        return builder;
+    }
     
     
     // Политики CORS

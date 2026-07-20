@@ -11,16 +11,14 @@
       - "8001:5432" 
     volumes:
       - pgdata:/var/lib/postgresql/data
-    
-    
-    
+      
   pgadmin:
     container_name: pgadmin-book-shared
     image: dpage/pgadmin4
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@bookshare.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_PASSWORD:  
     ports:
       - "8080:80"
     depends_on:

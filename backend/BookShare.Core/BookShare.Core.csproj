@@ -12,9 +12,6 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Endpoints\Auth\Registration\" />
-    </ItemGroup>
-    <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>

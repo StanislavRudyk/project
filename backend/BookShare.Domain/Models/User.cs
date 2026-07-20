@@ -6,9 +6,9 @@ public sealed class User
 {
     public Guid Id { get; private set; }
     public UserName UserName { get; private set; }
-    public string PasswordHash { get; private set; }
+    public PasswordHash PasswordHash { get; private set; }
     public Email? Email { get; private set; }
-    public DateTime CreatedAt { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
 
     private User()
     {
@@ -17,9 +17,9 @@ public sealed class User
     private User(
         Guid id,
         UserName userName,
-        string passwordHash,
+        PasswordHash passwordHash,
         Email? email,
-        DateTime createdAt)
+        DateTimeOffset createdAt)
     {
         Id = id;
         UserName = userName;
@@ -30,7 +30,7 @@ public sealed class User
 
     public static User Create(
         UserName userName,
-        string passwordHash,
+        PasswordHash passwordHash,
         Email? email)
     {
         return new User(
@@ -38,7 +38,7 @@ public sealed class User
             userName,
             passwordHash,
             email,
-            DateTime.UtcNow);
+            DateTimeOffset.UtcNow);
     }
 
     public void ChangeEmail(Email? email)
@@ -46,7 +46,7 @@ public sealed class User
         Email = email;
     }
 
-    public void ChangePassword(string passwordHash)
+    public void ChangePassword(PasswordHash passwordHash)
     {
         PasswordHash = passwordHash;
     }

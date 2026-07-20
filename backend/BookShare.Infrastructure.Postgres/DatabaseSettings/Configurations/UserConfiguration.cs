@@ -24,7 +24,12 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
                 value => UserName.Create(value))
             .IsRequired();
         
-        builder.Property(x => x.PasswordHash).IsRequired();
+        builder.Property(x => x.PasswordHash)
+            .HasConversion(
+                hash => hash.Value,
+                value => PasswordHash.Create(value))
+            .IsRequired();
+        
         builder.Property(x => x.CreatedAt).IsRequired();
     }
 }
