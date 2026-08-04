@@ -8,9 +8,11 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design"/>
         <PackageReference Include="BCrypt.Net-Next"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\BookShare.Domain\BookShare.Domain.csproj" />
     </ItemGroup>
+
 </Project>

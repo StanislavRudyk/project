@@ -10,26 +10,40 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("users");
+
         builder.HasKey(x => x.Id);
-        
-        builder.Property(x => x.Email)
-            .HasConversion(
-                email => email.HasValue ? email.Value.Value : null,
-                value => value == null ? (Email?)null : Email.Create(value))
-            .IsRequired(false);
-        
+
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.Property(x => x.UserName)
             .HasConversion(
-                uname => uname.Value,
-                value => UserName.Create(value))
+                x => x.Value,
+                x => UserName.Create(x))
+            .HasMaxLength(20)
             .IsRequired();
-        
+
+        builder.HasIndex(x => x.UserName)
+            .IsUnique();
+
         builder.Property(x => x.PasswordHash)
             .HasConversion(
-                hash => hash.Value,
-                value => PasswordHash.Create(value))
+                x => x.Value,
+                x => PasswordHash.Create(x))
+            .HasMaxLength(255)
             .IsRequired();
-        
-        builder.Property(x => x.CreatedAt).IsRequired();
+
+        builder.Property(x => x.Email)
+            .HasConversion(
+                x => x.HasValue ? x.Value.Value : null,
+                x => x == null ? (Email?)null : Email.Create(x))
+            .HasMaxLength(255)
+            .IsRequired(false);
+
+        builder.HasIndex(x => x.Email)
+            .IsUnique();
+
+        builder.Property(x => x.CreatedAt)
+            .IsRequired();
     }
 }

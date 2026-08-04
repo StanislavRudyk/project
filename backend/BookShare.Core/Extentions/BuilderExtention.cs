@@ -1,8 +1,10 @@
 using System.Text.Json;
+using BookShare.Core.Endpoints.Auth.Login;
 using BookShare.Core.Endpoints.Auth.Registration;
 using BookShare.Core.EndpointSettings;
 using BookShare.Core.Settings;
 using BookShare.Domain.Abstractions;
+using BookShare.Infrastructure.Postgres.Configuration;
 using BookShare.Infrastructure.Postgres.DatabaseSettings;
 using BookShare.Infrastructure.Postgres.Repository;
 using BookShare.Infrastructure.Security;
@@ -44,14 +46,13 @@ public static class BuilderExtention
             });
             
             
-            // Когда будет JWT
-            // options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            // {
-            //     Type = SecuritySchemeType.ApiKey,
-            //     Name = "Cookie",
-            //     In = ParameterLocation.Cookie,
-            //     Description = "JWT Authorization header"
-            // });
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.ApiKey,
+                Name = "Cookie",
+                In = ParameterLocation.Cookie,
+                Description = "JWT Authorization header"
+            });
         });
 
         return builder;
@@ -77,10 +78,23 @@ public static class BuilderExtention
     public static WebApplicationBuilder AddDependencyInjection(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<RegistrationHandler>();
+        builder.Services.AddScoped<LoginHandler>();
+
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IRefreshSessionRepository, RefreshSessionRepository>();
+
         builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-        builder.Services.AddScoped<DbContext, DataContext>();
+        builder.Services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
+        builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
+        builder.Services.AddScoped<ITokenHasher, TokenHasher>();
+
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        builder.Services.AddScoped<DbContext, DataContext>();
+        
+        builder.Services.Configure<JwtOptions>(
+            builder.Configuration.GetSection(JwtOptions.SectionName));
+        
         return builder;
     }
     

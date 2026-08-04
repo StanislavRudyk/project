@@ -8,6 +8,8 @@ public sealed class RefreshSession
 
     public Guid UserId { get; private set; }
 
+    public User User { get; private set; } = null!;
+
     public RefreshTokenHash TokenHash { get; private set; }
 
     public DateTime CreatedAt { get; private set; }

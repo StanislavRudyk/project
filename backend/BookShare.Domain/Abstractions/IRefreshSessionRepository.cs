@@ -8,8 +8,7 @@ public interface IRefreshSessionRepository
     Task<RefreshSession?> FindByTokenHashAsync(
         RefreshTokenHash hash);
 
-    Task<IReadOnlyList<RefreshSession>> FindByUserIdAsync(
-        Guid userId);
+    Task<IReadOnlyList<RefreshSession>> GetActiveByUserIdAsync(Guid userId);
 
     Task AddAsync(RefreshSession session);
 

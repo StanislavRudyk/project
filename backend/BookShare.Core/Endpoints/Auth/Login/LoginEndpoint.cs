@@ -2,17 +2,21 @@ using BookShare.Core.EndpointSettings;
 
 namespace BookShare.Core.Endpoints.Auth.Login;
 
-public sealed class RegistrationEndpoint : IEndpoint
+public sealed class LoginEndpoint : IEndpoint
 {
     public void MapEndpoint(WebApplication app)
     {
-        app.MapPost("/api/auth/register", Handle)
+        app.MapPost("/api/auth/login", Handle)
             .WithTags("Authentication")
-            .WithName("Register");
+            .WithName("Login");
     }
 
-    private static async Task<IResult> Handle(LoginRequest request)
+    private static async Task<IResult> Handle(
+        LoginRequest request,
+        LoginHandler handler)
     {
-        return Results.Created($"/api/users/{id}", null);
+        var response = await handler.HandleAsync(request);
+
+        return Results.Ok(response);
     }
 }

@@ -5,10 +5,16 @@ namespace BookShare.Domain.Models;
 public sealed class User
 {
     public Guid Id { get; private set; }
+
     public UserName UserName { get; private set; }
+
     public PasswordHash PasswordHash { get; private set; }
+
     public Email? Email { get; private set; }
+
     public DateTimeOffset CreatedAt { get; private set; }
+
+    public ICollection<RefreshSession> RefreshSessions { get; private set; } = [];
 
     private User()
     {
