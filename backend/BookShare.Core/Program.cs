@@ -4,8 +4,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder
     .AddApplicationServices()
+    .AddDatabase()
     .AddDependencyInjection()
-    .AddDatabase();
+    .AddAuthenticationServices()
+    .AddCorsPolicy();
 
 var app = builder.Build();
 

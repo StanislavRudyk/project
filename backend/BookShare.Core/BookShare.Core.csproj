@@ -3,8 +3,8 @@
       <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Scalar.AspNetCore" />
         <PackageReference Include="BCrypt.Net-Next" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
@@ -17,6 +17,10 @@
       </Content>
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\BookShare.Domain\BookShare.Domain.csproj" />
       <ProjectReference Include="..\BookShare.Infrastructure.Postgres\BookShare.Infrastructure.Postgres.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Endpoints\Auth\Logout\" />
     </ItemGroup>
 </Project>

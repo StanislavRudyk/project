@@ -1,27 +1,33 @@
 using BookShare.Core.EndpointSettings;
 using BookShare.Infrastructure.Postgres.Configuration;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
-namespace BookShare.Core.Endpoints.Auth.Login;
+namespace BookShare.Core.Endpoints.Auth.Refresh;
 
-public sealed class LoginEndpoint : IEndpoint
+public sealed class RefreshEndpoint : IEndpoint
 {
     public void MapEndpoint(WebApplication app)
     {
-        app.MapPost("/api/auth/login", Handle)
+        app.MapPost("/api/auth/refresh", Handle)
             .WithTags("Authentication")
-            .WithName("Login");
+            .WithName("Refresh");
     }
 
     private static async Task<IResult> Handle(
         HttpContext context,
-        LoginRequest request,
-        LoginHandler handler,
+        RefreshHandler handler,
         IOptions<JwtOptions> options)
     {
-        var jwtOptions = options.Value;
-        var result = await handler.HandleAsync(request, context);
+        if (!context.Request.Cookies.TryGetValue(
+                "refresh_token",
+                out var refreshToken))
+        {
+            return Results.Unauthorized();
+        }
+
+        var result = await handler.HandleAsync(refreshToken);
+
+        var jwt = options.Value;
 
         context.Response.Cookies.Append(
             "access_token",
@@ -31,7 +37,8 @@ public sealed class LoginEndpoint : IEndpoint
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Lax,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(jwtOptions.AccessTokenLifetimeMinutes)
+                Expires = DateTimeOffset.UtcNow
+                    .AddMinutes(jwt.AccessTokenLifetimeMinutes)
             });
 
         context.Response.Cookies.Append(
@@ -42,9 +49,10 @@ public sealed class LoginEndpoint : IEndpoint
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddDays(jwtOptions.RefreshTokenLifetimeDays)
+                Expires = DateTimeOffset.UtcNow
+                    .AddDays(jwt.RefreshTokenLifetimeDays)
             });
 
-        return Results.Ok();
+        return Results.NoContent();
     }
 }

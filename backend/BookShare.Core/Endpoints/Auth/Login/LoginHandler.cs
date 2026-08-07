@@ -32,7 +32,7 @@ public sealed class LoginHandler
         _jwtOptions = jwtOptions.Value;
     }
 
-    public async Task<LoginResponse> HandleAsync(LoginRequest request)
+    public async Task<LoginResult> HandleAsync(LoginRequest request, HttpContext context)
     {
         // TODO: Доработать поиск одновременно по почте и по логину
         UserName userName = UserName.Create(request.UserName);
@@ -48,17 +48,24 @@ public sealed class LoginHandler
         var refreshToken = _refreshTokenGenerator.Generate();
         var refreshTokenHash = _tokenHasher.Hash(refreshToken);
         
+        string? userAgent = context.Request.Headers.UserAgent.ToString();
+        if (string.IsNullOrWhiteSpace(userAgent))
+            userAgent = null;
+        string? ipAddress = context.Connection.RemoteIpAddress?.ToString();
+        
         var session = RefreshSession.Create(
             userId: user.Id,
             tokenHash: refreshTokenHash,
             lifetime: TimeSpan.FromDays(_jwtOptions.RefreshTokenLifetimeDays),
-            userAgent: null,
-            ipAddress: null);
+            userAgent: userAgent,
+            ipAddress: ipAddress);
+        
+
         
         await _refreshSessions.AddAsync(session);
         await _unitOfWork.SaveChangesAsync();
         
-        return new LoginResponse(
+        return new LoginResult(
             accessToken,
             refreshToken);
     }
