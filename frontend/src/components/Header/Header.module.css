@@ -1,79 +1,274 @@
 .header {
-  /* --- ПОЗИЦИОНИРОВАНИЕ --- */
-  position: sticky; /* Делает шапку прилипающей к экрану */
-  top: 0; /* Указываем, что она должна прилипнуть именно к самому верху */
-  z-index: 100; /* Шапка всегда будет лежать поверх остальных элементов сайта */
-  
-  /* --- ВЕРСТКА --- */
-  display: flex; /* Включаем Flexbox для выстраивания блоков (лого, меню, кнопка) в линию */
-  align-items: center; /* Выравниваем все блоки строго по центру по вертикали */
-  justify-content: space-between; /* Раскидываем блоки: логотип налево, меню в центр/право, кнопку направо */
-  
-  /* --- ДИЗАЙН --- */
-  padding: 15px 40px; /* Внутренние отступы: 15px сверху и снизу, 40px по бокам */
-  background-color: #e2ffac;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 72px;
+  padding: 0 48px;
+  background: color-mix(in srgb, var(--bg) 92%, white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
-/* --- БЛОК ЛОГОТИПА --- */
-.logoArea {
-  display: flex; /* Снова Flexbox, чтобы иконка и текст стояли рядом в ряд */
-  align-items: center; /* Выравниваем картинку и текст по одной линии */
-  gap: 15px; /* Расстояние между картинкой и текстом */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fg);
+  flex-shrink: 0;
 }
 
-.logoImage {
-  width: 50px; /* ЖЕСТКО фиксируем ширину картинки, чтобы она не была огромной */
-  height: 50px; /* ЖЕСТКО фиксируем высоту картинки */
-  object-fit: contain; /* Картинка масштабируется внутри своих 50x50px без искажений */
+.logoMark {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
 }
 
-.logoText {
-  color: #000000; 
-  font-size: 1.5rem; /* Делаем текст крупнее */
-  font-weight: 700; /* Делаем текст жирным */
-  margin: 0; /* Убираем стандартные отступы браузера от заголовка */
+.logoWord {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
 }
 
-/* --- НАВИГАЦИЯ (МЕНЮ) --- */
-.nav {
-  display: flex; /* Выстраиваем ссылки в ровную горизонтальную линию */
-  align-items: center; /* Центрируем их по вертикали */
-  gap: 35px; /* Делаем отступы между ссылками, чтобы они не слипались */
+.search {
+  flex: 1;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 42px;
+  padding: 0 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: border-color 0.15s;
 }
 
-.navLink {
-  color: #000000; 
-  text-decoration: none; /* Убираем стандартное подчеркивание у ссылок */
-  font-weight: 500; /* Делаем шрифт чуть-чуть жирнее */
-  font-size: 1.1rem; /* Увеличиваем размер букв */
-  cursor: pointer; /* Курсор-пальчик при наведении */
-  transition: color 0.3s ease; /* Плавная анимация смены цвета (занимает 0.3 секунды) */
+.search:hover {
+  border-color: var(--muted);
 }
 
-.navLink:hover {
-  color: #ff0000; /* При наведении мышки текст плавно меняеться */
+.search svg { 
+  flex-shrink: 0; 
+  opacity: 0.55; 
 }
 
-/* --- БЛОК С КНОПКАМИ СПРАВА --- */
-.actions {
-  display: flex; /* Подготовка блока под кнопки (если их будет несколько) */
-  align-items: center; /* Центрирование */
+.searchFakeInput {
+  flex: 1;
+  font: 500 14px/1.2 var(--font-body);
+  color: var(--muted);
+  user-select: none;
 }
 
-.loginButton {
-  padding: 10px 24px; /* Внутренние отступы внутри кнопки: чтобы она была широкой */
-  background-color: #000000; 
-  color: white; /* Белый цвет текста внутри кнопки */
-  border: none; /* Убираем страшную стандартную рамку кнопки */
-  border-radius: 8px; /* Слегка закругляем углы кнопки */
-  font-size: 1rem; /* Размер текста в кнопке */
-  font-weight: 600; /* Текст в кнопке делаем полужирным */
-  cursor: pointer; /* Курсор-пальчик */
-  transition: all 0.3s ease; /* Включаем плавную анимацию для всех hover-эффектов ниже */
+.searchShortcut {
+  font-size: 12px;
+  background: var(--border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--muted);
+  font-weight: 600;
 }
 
-.loginButton:hover {
-  background-color: #ff0000; /* При наведении цвет кнопки меняеться */
-  transform: translateY(-2px); /* Классный эффект: кнопка слегка приподнимается вверх */
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); /* Под кнопкой появляется синее свечение */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  list-style: none;
+}
+
+.navLinks a {
+  color: var(--muted);
+  font: 500 14px/1 var(--font-ui);
+  padding: 10px 14px;
+  border-radius: 999px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.navLinks a:hover,
+.navLinks a.isActive {
+  color: var(--fg);
+  background: rgba(30, 41, 59, 0.04);
+}
+
+.iconBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+
+.iconBtn:hover {
+  background: rgba(30, 41, 59, 0.04);
+  color: var(--fg);
+}
+
+.userMenuContainer {
+  position: relative;
+  margin-left: 8px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 600 14px/1 var(--font-ui);
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
+}
+
+.dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 220px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdownItem {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font: 500 14px/1 var(--font-body);
+  color: var(--fg);
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.dropdownItem:hover {
+  background: rgba(30, 41, 59, 0.04);
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* Command Palette / Search Modal */
+.searchModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 17, 21, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 12vh;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.searchModal {
+  width: 100%;
+  max-width: 600px;
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  animation: modalSlideIn 0.2s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.searchModalInputWrapper {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.searchModalInputWrapper svg {
+  color: var(--muted);
+}
+
+.searchModalInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font: 400 18px/1.2 var(--font-body);
+  color: var(--fg);
+  outline: none;
+}
+
+.searchModalInput::placeholder {
+  color: var(--muted);
+}
+
+.searchModalContent {
+  padding: 16px 20px;
+}
+
+.searchSectionTitle {
+  font: 600 12px/1 var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.searchResult {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.searchResult:hover {
+  background: rgba(30, 41, 59, 0.04);
+}
+
+.searchResultIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--border);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+
+.searchResultText {
+  font: 500 14px/1.2 var(--font-body);
+  color: var(--fg);
 }

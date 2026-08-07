@@ -1,0 +1,77 @@
+.toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 20px 40px -8px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  max-width: 340px;
+  pointer-events: auto;
+}
+
+.icon {
+  font-size: 36px;
+  flex-shrink: 0;
+  animation: badgePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes badgePop {
+  0%   { transform: scale(0) rotate(-30deg); }
+  60%  { transform: scale(1.2) rotate(5deg);  }
+  100% { transform: scale(1) rotate(0deg);   }
+}
+
+.text {}
+
+.label {
+  font: 600 11px/1 var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.title {
+  font: 700 15px/1.2 var(--font-ui);
+  color: var(--fg);
+  margin-bottom: 2px;
+}
+
+.desc {
+  font: 400 13px/1.4 var(--font-body);
+  color: var(--muted);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 16px;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+
+.closeBtn:hover {
+  background: rgba(30, 41, 59, 0.06);
+}
+
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  border-radius: 0 0 0 16px;
+  animation: progressDrain linear forwards;
+}

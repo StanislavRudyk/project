@@ -1,0 +1,79 @@
+.builderWrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title {
+  font: 700 16px/1.2 var(--font-ui);
+  color: var(--fg);
+}
+
+.previewArea {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 40px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+  transition: background 0.3s, border 0.3s;
+}
+
+.optionsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionLabel {
+  font: 600 11px/1 var(--font-ui);
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.colorGrid, .emojiGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.colorBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.colorBtn:hover { transform: scale(1.1); }
+.colorBtn.active { border-color: var(--fg); transform: scale(1.1); }
+
+.emojiBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 20px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.emojiBtn:hover { transform: scale(1.1); }
+.emojiBtn.active { border-color: var(--accent); background: rgba(245,158,11,0.1); transform: scale(1.1); }

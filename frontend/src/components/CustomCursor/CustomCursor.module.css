@@ -1,0 +1,47 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  mix-blend-mode: difference;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: var(--fg);
+  border-radius: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+}
+
+.ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--fg);
+  border-radius: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), width 0.3s, height 0.3s, opacity 0.3s;
+  opacity: 0.5;
+}
+
+.cursor.hovered .dot {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.cursor.hovered .ring {
+  width: 56px;
+  height: 56px;
+  opacity: 0.8;
+}
+
+.cursor.clicking .ring {
+  width: 28px;
+  height: 28px;
+  opacity: 1;
+}

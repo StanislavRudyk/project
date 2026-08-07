@@ -1,0 +1,30 @@
+.streak {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px 6px 8px;
+  cursor: default;
+}
+
+.flame {
+  font-size: 18px;
+  animation: flicker 1.8s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50%       { transform: scale(1.15) rotate(2deg); }
+}
+
+.count {
+  font: 700 14px/1 var(--font-ui);
+  color: var(--fg);
+}
+
+.label {
+  font: 400 12px/1 var(--font-body);
+  color: var(--muted);
+}

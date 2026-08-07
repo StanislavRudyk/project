@@ -1,0 +1,253 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* ─── Hero ─── */
+.hero {
+  background: linear-gradient(160deg, var(--surface) 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 64px 48px 48px;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 12px/1 var(--font-ui);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+.kicker span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: block; }
+
+.heroTitle {
+  font: 700 40px/1.1 var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.heroSub {
+  font: 400 16px/1.5 var(--font-body);
+  color: var(--muted);
+  max-width: 480px;
+}
+
+/* ─── Layout ─── */
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 48px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 900px) { .content { grid-template-columns: 1fr; } }
+
+/* ─── Book selector ─── */
+.bookSelect {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.sectionTitle {
+  font: 700 16px/1.2 var(--font-ui);
+  color: var(--fg);
+  margin: 0 0 16px;
+}
+
+.bookPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.pill {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  font: 500 13px/1 var(--font-body);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pill.active {
+  border-color: var(--accent);
+  background: rgba(245,158,11,0.08);
+  color: var(--fg);
+}
+
+/* ─── Timeline ─── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.chapterRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.chapterRow:last-child { border-bottom: none; }
+
+.chapterNum {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  display: grid;
+  place-items: center;
+  font: 700 12px/1 var(--font-ui);
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.chapterInfo {
+  flex: 1;
+}
+
+.chapterTitle {
+  font: 600 14px/1.2 var(--font-ui);
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+
+.moodPicker {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.moodBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+  display: grid;
+  place-items: center;
+}
+
+.moodBtn:hover { transform: scale(1.15); border-color: var(--muted); }
+
+.moodBtn.selected {
+  border-color: var(--accent);
+  background: rgba(245,158,11,0.1);
+  transform: scale(1.1);
+}
+
+.moodNote {
+  margin-top: 8px;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font: 400 13px/1.5 var(--font-body);
+  color: var(--fg);
+  background: var(--bg);
+  outline: none;
+  resize: none;
+  transition: border-color 0.15s;
+}
+
+.moodNote:focus { border-color: var(--accent); }
+.moodNote::placeholder { color: var(--muted); }
+
+/* ─── Sidebar: Mood chart ─── */
+.chartCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  padding-top: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.bar {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  cursor: default;
+}
+
+.barTooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--fg);
+  color: var(--bg);
+  font: 600 11px/1 var(--font-ui);
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.bar:hover .barTooltip { opacity: 1; }
+
+.chartLabels {
+  display: flex;
+  gap: 6px;
+}
+
+.chartLabel {
+  flex: 1;
+  text-align: center;
+  font: 400 10px/1 var(--font-body);
+  color: var(--muted);
+}
+
+.legendGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 400 12px/1 var(--font-body);
+  color: var(--muted);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}

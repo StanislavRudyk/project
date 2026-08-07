@@ -1,0 +1,11 @@
+{
+  "kind": "critique-panel",
+  "score": 4,
+  "axes": {
+    "clarity": { "score": 4, "notes": "Two screens clearly separated; home hierarchy reads Book of the Day then community feed." },
+    "hierarchy": { "score": 4, "notes": "Hero cover + glow is the focal point; masonry cards secondary; nav CTA amber with charcoal text." },
+    "typography": { "score": 5, "notes": "Playfair Display for editorial titles, Plus Jakarta for UI, Inter for body — brand-matched." },
+    "motion": { "score": 4, "notes": "Subtle ambient glow pulse on hero and modal book stack; form validation feedback." },
+    "brand": { "score": 5, "notes": "Cream #FDFBF7, amber #F59E0B CTAs with charcoal text, soft 16px radii, warm gold hover — matches brand-spec.md." }
+  }
+}
