@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pagefold — Sign Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #FDFBF7;
+      --surface: #FFFFFF;
+      --fg: #1E293B;
+      --muted: #64748B;
+      --border: #F3F4F6;
+      --accent: #F59E0B;
+      --accent-hover: #D97706;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.18);
+      --radius-card: 16px;
+      --radius-input: 10px;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #0f1115;
+      color: var(--fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .frame {
+      width: 1440px;
+      height: 810px;
+      margin: 24px auto;
+      background: var(--bg);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.35);
+    }
+
+    /* Blurred home backdrop (product context) */
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      filter: blur(8px);
+      transform: scale(1.02);
+      opacity: 0.55;
+      pointer-events: none;
+      user-select: none;
+    }
+    .backdrop .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      height: 72px;
+      padding: 0 48px;
+      background: color-mix(in srgb, var(--bg) 92%, white);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--fg);
+    }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    }
+    .logo-word {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .search-stub {
+      flex: 1;
+      max-width: 420px;
+      height: 42px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-input);
+    }
+    .nav-pill {
+      margin-left: auto;
+      width: 72px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(30,41,59,0.06);
+    }
+    .nav-cta {
+      width: 88px;
+      height: 40px;
+      border-radius: 999px;
+      background: var(--accent);
+      margin-left: 8px;
+    }
+    .backdrop-main {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 36px;
+      padding: 28px 48px;
+    }
+    .stub-hero {
+      height: 620px;
+      border-radius: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .stub-feed {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .stub-card {
+      height: 180px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(30, 41, 59, 0.42);
+      z-index: 5;
+    }
+
+    /* —— Modal —— */
+    .modal {
+      position: absolute;
+      z-index: 10;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 920px;
+      height: 560px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .modal-visual {
+      position: relative;
+      background: linear-gradient(165deg, #FDFBF7 0%, #F5EDE0 45%, #EDE4D4 100%);
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+    .modal-visual .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(42px);
+      pointer-events: none;
+    }
+    .glow.a {
+      width: 220px;
+      height: 220px;
+      top: 18%;
+      left: 18%;
+      background: #c45c26;
+      opacity: 0.18;
+      animation: floatGlow 7s ease-in-out infinite;
+    }
+    .glow.b {
+      width: 180px;
+      height: 180px;
+      bottom: 22%;
+      right: 12%;
+      background: #2a6f7a;
+      opacity: 0.15;
+      animation: floatGlow 7s ease-in-out infinite reverse;
+    }
+    .glow.c {
+      width: 140px;
+      height: 140px;
+      top: 42%;
+      left: 48%;
+      background: #F59E0B;
+      opacity: 0.14;
+    }
+    @keyframes floatGlow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .book-stack {
+      position: relative;
+      z-index: 2;
+      height: 280px;
+      margin-bottom: 28px;
+    }
+    .stack-book {
+      position: absolute;
+      width: 118px;
+      height: 178px;
+      border-radius: 4px 8px 8px 4px;
+      box-shadow:
+        3px 6px 18px rgba(0,0,0,0.16),
+        0 0 0 1px rgba(255,255,255,0.12) inset;
+      overflow: hidden;
+    }
+    .stack-book::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 6px;
+      background: rgba(0,0,0,0.22);
+    }
+    .stack-book .t {
+      position: absolute;
+      left: 16px;
+      right: 12px;
+      bottom: 18px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      line-height: 1.2;
+      color: #FDFBF7;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+    }
+    .sb1 {
+      left: 36px;
+      bottom: 40px;
+      background: linear-gradient(155deg, #1a3a42, #2a6f7a 45%, #c45c26);
+      transform: rotate(-8deg);
+      z-index: 1;
+    }
+    .sb2 {
+      left: 118px;
+      bottom: 52px;
+      width: 128px;
+      height: 192px;
+      background: linear-gradient(160deg, #1e3a5f, #3d7ea6 50%, #f0c27a);
+      transform: rotate(3deg);
+      z-index: 3;
+    }
+    .sb3 {
+      left: 210px;
+      bottom: 28px;
+      background: linear-gradient(150deg, #3b1f2b, #8b4557 55%, #e8b4a0);
+      transform: rotate(11deg);
+      z-index: 2;
+    }
+
+    .visual-copy {
+      position: relative;
+      z-index: 2;
+    }
+    .visual-copy h2 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--fg);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      text-wrap: balance;
+    }
+    .visual-copy p {
+      font: 400 14px/1.5 var(--font-body);
+      color: var(--muted);
+      max-width: 300px;
+    }
+
+    .modal-form {
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .close:hover {
+      background: var(--border);
+      color: var(--fg);
+    }
+    .form-kicker {
+      font: 600 11px/1 var(--font-ui);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-hover);
+      margin-bottom: 10px;
+    }
+    .form-title {
+      font-family: var(--font-ui);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      margin-bottom: 6px;
+    }
+    .form-sub {
+      font: 400 14px/1.45 var(--font-body);
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+    .form-sub a {
+      color: var(--fg);
+      font-weight: 500;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+    .field label {
+      display: block;
+      font: 500 12px/1.2 var(--font-ui);
+      color: var(--fg);
+      margin-bottom: 8px;
+    }
+    .field input {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-input);
+      background: var(--bg);
+      font: 400 14px/1.2 var(--font-body);
+      color: var(--fg);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field input::placeholder { color: #94A3B8; }
+    .field input:focus {
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+      background: var(--surface);
+    }
+
+    .btn-submit {
+      margin-top: 8px;
+      height: 48px;
+      width: 100%;
+      border: 0;
+      border-radius: 9999px;
+      background: var(--accent);
+      color: var(--fg);
+      font: 600 15px/1 var(--font-ui);
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.28);
+      transition: background 0.15s;
+    }
+    .btn-submit:hover { background: var(--accent-hover); }
+
+    .legal {
+      margin-top: 16px;
+      font: 400 11px/1.45 var(--font-body);
+      color: var(--muted);
+      text-align: center;
+    }
+    .legal a {
+      color: var(--muted);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .err {
+      display: none;
+      margin-top: 6px;
+      font: 500 12px/1.2 var(--font-body);
+      color: #B45309;
+    }
+    .field.is-invalid input {
+      border-color: #D97706;
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+    }
+    .field.is-invalid .err { display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame" data-screen-label="02 Sign Up">
+    <div class="backdrop" aria-hidden="true">
+      <div class="nav">
+        <div class="logo">
+          <span class="logo-mark"></span>
+          <span class="logo-word">Pagefold</span>
+        </div>
+        <div class="search-stub"></div>
+        <div class="nav-pill"></div>
+        <div class="nav-pill"></div>
+        <div class="nav-cta"></div>
+      </div>
+      <div class="backdrop-main">
+        <div class="stub-hero"></div>
+        <div class="stub-feed">
+          <div class="stub-card"></div>
+          <div class="stub-card"></div>
+          <div class="stub-card"></div>
+          <div class="stub-card"></div>
+        </div>
+      </div>
+    </div>
+    <div class="scrim" aria-hidden="true"></div>
+
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signup-title">
+      <aside class="modal-visual">
+        <div class="glow a"></div>
+        <div class="glow b"></div>
+        <div class="glow c"></div>
+        <div class="book-stack">
+          <div class="stack-book sb1"><span class="t">The Salt House</span></div>
+          <div class="stack-book sb2"><span class="t">Orbital</span></div>
+          <div class="stack-book sb3"><span class="t">Piranesi</span></div>
+        </div>
+        <div class="visual-copy">
+          <h2>Your next chapter starts here</h2>
+          <p>Join readers who share reviews, build lists, and find the books that stay with them.</p>
+        </div>
+      </aside>
+
+      <div class="modal-form">
+        <a class="close" href="home.html" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </a>
+
+        <p class="form-kicker">Pagefold</p>
+        <h1 class="form-title" id="signup-title">Create your account</h1>
+        <p class="form-sub">Already reading with us? <a href="#">Log in</a></p>
+
+        <form id="signup-form" novalidate>
+          <div class="field" data-field="name">
+            <label for="name">Display name</label>
+            <input id="name" name="name" type="text" autocomplete="nickname" placeholder="How readers will see you" required />
+            <p class="err">Enter a display name.</p>
+          </div>
+          <div class="field" data-field="email">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+            <p class="err">Enter a valid email.</p>
+          </div>
+          <div class="field" data-field="password">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" required />
+            <p class="err">Use 8 or more characters.</p>
+          </div>
+          <button type="submit" class="btn-submit">Sign Up</button>
+        </form>
+        <p class="legal">By signing up you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var form = document.getElementById('signup-form');
+      if (!form) return;
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var ok = true;
+        form.querySelectorAll('.field').forEach(function (field) {
+          var input = field.querySelector('input');
+          var valid = input.checkValidity();
+          field.classList.toggle('is-invalid', !valid);
+          if (!valid) ok = false;
+        });
+        if (ok) {
+          var btn = form.querySelector('.btn-submit');
+          btn.textContent = 'Welcome aboard';
+          btn.disabled = true;
+          btn.style.opacity = '0.85';
+        }
+      });
+      form.querySelectorAll('input').forEach(function (input) {
+        input.addEventListener('input', function () {
+          input.closest('.field').classList.remove('is-invalid');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

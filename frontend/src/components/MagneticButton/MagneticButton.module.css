@@ -1,0 +1,34 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font: 600 14px/1 var(--font-ui);
+  cursor: pointer;
+  will-change: transform;
+  transition: background 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+
+.primary {
+  background: var(--fg);
+  color: var(--bg);
+  box-shadow: 0 4px 14px rgba(30, 41, 59, 0.2);
+}
+
+.primary:hover {
+  box-shadow: 0 8px 24px rgba(30, 41, 59, 0.3);
+}
+
+.accent {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+}
+
+.accent:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+}

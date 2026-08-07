@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pagefold — Design Screens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #FDFBF7;
+      --surface: #FFFFFF;
+      --fg: #1E293B;
+      --muted: #64748B;
+      --border: #F3F4F6;
+      --accent: #F59E0B;
+      --accent-hover: #D97706;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      padding: 64px 48px 80px;
+    }
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+    h1 {
+      font-family: var(--font-ui);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .lead {
+      font: 400 15px/1.5 var(--font-body);
+      color: var(--muted);
+      margin-bottom: 40px;
+      max-width: 52ch;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    a.card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    a.card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px -8px rgba(0,0,0,0.1);
+    }
+    .thumb {
+      height: 160px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .thumb-home {
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(196,92,38,0.25), transparent 55%),
+        radial-gradient(ellipse at 70% 60%, rgba(42,111,122,0.2), transparent 50%),
+        linear-gradient(180deg, #FDFBF7, #F5EDE0);
+    }
+    .thumb-home .mini {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -52%);
+      width: 56px;
+      height: 84px;
+      border-radius: 3px 5px 5px 3px;
+      background: linear-gradient(160deg, #1a3a42, #2a6f7a 40%, #c45c26);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .thumb-signup {
+      background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .thumb-signup .modal-mini {
+      width: 200px;
+      height: 100px;
+      border-radius: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    }
+    .modal-mini .l {
+      background: linear-gradient(165deg, #FDFBF7, #EDE4D4);
+    }
+    .modal-mini .r {
+      background: #fff;
+    }
+    .meta {
+      padding: 20px 22px 24px;
+    }
+    .meta .label {
+      font: 600 11px/1 var(--font-ui);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-hover);
+      margin-bottom: 8px;
+    }
+    .meta h2 {
+      font-family: var(--font-ui);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .meta p {
+      font: 400 13px/1.45 var(--font-body);
+      color: var(--muted);
+    }
+    .spec {
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 24px;
+      font: 500 12px/1.4 var(--font-body);
+      color: var(--muted);
+    }
+    .spec strong { color: var(--fg); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+    </div>
+    <h1>Pagefold</h1>
+    <p class="lead">High-fidelity 16:9 desktop UI — book review &amp; community platform. Open a screen to view the full canvas.</p>
+
+    <div class="grid">
+      <a class="card" href="home.html">
+        <div class="thumb thumb-home"><div class="mini" aria-hidden="true"></div></div>
+        <div class="meta">
+          <div class="label">Screen 01</div>
+          <h2>Home</h2>
+          <p>Nav, Book of the Day hero with ambient glow, masonry community feed.</p>
+        </div>
+      </a>
+      <a class="card" href="signup.html">
+        <div class="thumb thumb-signup">
+          <div class="modal-mini" aria-hidden="true"><div class="l"></div><div class="r"></div></div>
+        </div>
+        <div class="meta">
+          <div class="label">Screen 02</div>
+          <h2>Sign Up</h2>
+          <p>50/50 registration modal — book-stack glow + three-field form.</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="spec">
+      <span><strong>Canvas</strong> 1440×810 · 16:9</span>
+      <span><strong>Accent</strong> #F59E0B</span>
+      <span><strong>Canvas</strong> #FDFBF7</span>
+      <span><strong>Type</strong> Playfair + Jakarta + Inter</span>
+    </div>
+  </div>
+</body>
+</html>

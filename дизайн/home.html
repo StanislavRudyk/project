@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pagefold — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #FDFBF7;
+      --surface: #FFFFFF;
+      --fg: #1E293B;
+      --muted: #64748B;
+      --border: #F3F4F6;
+      --accent: #F59E0B;
+      --accent-hover: #D97706;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
+      --radius-card: 16px;
+      --radius-input: 10px;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #0f1115;
+      color: var(--fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 16:9 design frame @ 1440×810 */
+    .frame {
+      width: 1440px;
+      height: 810px;
+      margin: 24px auto;
+      background: var(--bg);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.35);
+    }
+
+    /* —— Nav —— */
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      height: 72px;
+      padding: 0 48px;
+      background: color-mix(in srgb, var(--bg) 92%, white);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 20;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--fg);
+      flex-shrink: 0;
+    }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+    }
+    .logo-mark svg { display: block; }
+    .logo-word {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+    .search {
+      flex: 1;
+      max-width: 420px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 42px;
+      padding: 0 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-input);
+      box-shadow: var(--shadow);
+    }
+    .search svg { flex-shrink: 0; opacity: 0.55; }
+    .search input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      background: transparent;
+      font: 500 14px/1.2 var(--font-body);
+      color: var(--fg);
+    }
+    .search input::placeholder { color: var(--muted); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font: 500 14px/1 var(--font-ui);
+      padding: 10px 14px;
+      border-radius: 999px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover,
+    .nav-links a.is-active {
+      color: var(--fg);
+      background: rgba(30, 41, 59, 0.04);
+    }
+    .btn-signup {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      padding: 0 22px;
+      margin-left: 8px;
+      background: var(--accent);
+      color: var(--fg);
+      font: 600 14px/1 var(--font-ui);
+      text-decoration: none;
+      border-radius: 9999px;
+      border: 0;
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.28);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-signup:hover { background: var(--accent-hover); }
+
+    /* —— Main scroll area —— */
+    .main {
+      height: calc(810px - 72px);
+      overflow: hidden;
+      padding: 28px 48px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 36px;
+      align-items: start;
+    }
+
+    /* —— Hero: Book of the Day —— */
+    .hero {
+      position: relative;
+      height: 678px;
+      border-radius: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 36px 32px 32px;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-glow {
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      filter: blur(48px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+      animation: glowPulse 8s ease-in-out infinite;
+    }
+    .hero-glow.g1 {
+      top: 8%;
+      left: 12%;
+      background: #c45c26;
+    }
+    .hero-glow.g2 {
+      bottom: 10%;
+      right: 8%;
+      background: #2a6f7a;
+      opacity: 0.14;
+      animation-delay: -3s;
+    }
+    .hero-glow.g3 {
+      top: 40%;
+      left: 40%;
+      width: 220px;
+      height: 220px;
+      background: #f59e0b;
+      opacity: 0.12;
+      animation-delay: -5s;
+    }
+    @keyframes glowPulse {
+      0%, 100% { transform: scale(1); opacity: 0.16; }
+      50% { transform: scale(1.08); opacity: 0.2; }
+    }
+    .hero-kicker {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font: 600 11px/1 var(--font-ui);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-hover);
+      margin-bottom: 20px;
+    }
+    .hero-kicker span {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+    }
+    .hero-stage {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+    }
+    .cover-wrap {
+      position: relative;
+      width: 200px;
+      height: 300px;
+    }
+    .cover-glow {
+      position: absolute;
+      inset: -20px;
+      border-radius: 20px;
+      background: radial-gradient(circle at 40% 40%, rgba(196, 92, 38, 0.45), rgba(42, 111, 122, 0.25) 55%, transparent 70%);
+      filter: blur(36px);
+      opacity: 0.85;
+      z-index: 0;
+      animation: coverGlow 6s ease-in-out infinite;
+    }
+    @keyframes coverGlow {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.06) rotate(2deg); }
+    }
+    .cover {
+      position: relative;
+      z-index: 1;
+      width: 200px;
+      height: 300px;
+      border-radius: 6px 10px 10px 6px;
+      overflow: hidden;
+      box-shadow:
+        4px 8px 24px rgba(0,0,0,0.18),
+        0 0 0 1px rgba(255,255,255,0.15) inset;
+      background:
+        linear-gradient(160deg, #1a3a42 0%, #2a6f7a 38%, #c45c26 72%, #e8a05c 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px 20px 24px;
+      color: #FDFBF7;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 10px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.08));
+    }
+    .cover-spine-label {
+      font: 600 9px/1.3 var(--font-ui);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      line-height: 1.15;
+      font-weight: 700;
+      text-wrap: balance;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .cover-author {
+      font: 500 12px/1.3 var(--font-body);
+      opacity: 0.85;
+    }
+    .hero-meta {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 320px;
+    }
+    .hero-meta h1 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      margin-bottom: 6px;
+    }
+    .hero-meta .by {
+      font: 500 14px/1.4 var(--font-body);
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .stars {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin-bottom: 16px;
+    }
+    .stars svg { display: block; }
+    .stars .rating {
+      margin-left: 8px;
+      font: 600 13px/1 var(--font-ui);
+      color: var(--fg);
+      font-variant-numeric: tabular-nums;
+    }
+    .hero-blurb {
+      font: 400 14px/1.55 var(--font-body);
+      color: var(--muted);
+      margin-bottom: 20px;
+      text-wrap: pretty;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .btn-primary {
+      height: 40px;
+      padding: 0 20px;
+      background: var(--accent);
+      color: var(--fg);
+      font: 600 13px/1 var(--font-ui);
+      border: 0;
+      border-radius: 9999px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+    }
+    .btn-ghost {
+      height: 40px;
+      padding: 0 18px;
+      background: transparent;
+      color: var(--fg);
+      font: 600 13px/1 var(--font-ui);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      cursor: pointer;
+      background: var(--surface);
+    }
+
+    /* —— Community feed —— */
+    .feed {
+      height: 678px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .feed-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-shrink: 0;
+    }
+    .feed-head h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--fg);
+      letter-spacing: -0.02em;
+    }
+    .feed-head .tabs {
+      display: flex;
+      gap: 4px;
+    }
+    .feed-head .tabs button {
+      height: 32px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      font: 500 12px/1 var(--font-ui);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .feed-head .tabs button.is-on {
+      background: var(--surface);
+      color: var(--fg);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .masonry {
+      flex: 1;
+      columns: 2;
+      column-gap: 16px;
+      overflow: hidden;
+    }
+    .card {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-top {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .mini-cover {
+      width: 48px;
+      height: 72px;
+      border-radius: 4px 6px 6px 4px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .mini-cover::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: rgba(0,0,0,0.2);
+    }
+    .mc-1 { background: linear-gradient(160deg, #1e3a5f, #3d7ea6 50%, #f0c27a); }
+    .mc-2 { background: linear-gradient(150deg, #3b1f2b, #8b4557 55%, #e8b4a0); }
+    .mc-3 { background: linear-gradient(165deg, #1a2e1a, #4a7c59 45%, #c5d86d); }
+    .mc-4 { background: linear-gradient(155deg, #2c1810, #8b5a2b 50%, #d4a574); }
+    .mc-5 { background: linear-gradient(160deg, #1a1a2e, #4a4568 40%, #e07a5f); }
+    .mc-6 { background: linear-gradient(150deg, #0d2137, #1b4965 50%, #5fa8d3); }
+
+    .card-book {
+      min-width: 0;
+      flex: 1;
+    }
+    .card-book h3 {
+      font: 600 14px/1.3 var(--font-ui);
+      color: var(--fg);
+      letter-spacing: -0.01em;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-book .author {
+      font: 400 12px/1.3 var(--font-body);
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .card-stars {
+      display: flex;
+      gap: 2px;
+    }
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      font: 600 11px/1 var(--font-ui);
+      color: #fff;
+    }
+    .av-1 { background: #64748B; }
+    .av-2 { background: #0F766E; }
+    .av-3 { background: #9A3412; }
+    .av-4 { background: #4338CA; }
+    .av-5 { background: #BE185D; }
+    .av-6 { background: #0369A1; }
+    .user-meta { min-width: 0; }
+    .user-meta .name {
+      font: 600 12px/1.2 var(--font-ui);
+      color: var(--fg);
+    }
+    .user-meta .when {
+      font: 400 11px/1.2 var(--font-body);
+      color: var(--muted);
+    }
+    .snippet {
+      font: 400 13px/1.5 var(--font-body);
+      color: var(--fg);
+      text-wrap: pretty;
+    }
+    .snippet.short { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .snippet.mid { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .snippet.tall { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+    .eng {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-top: 4px;
+      border-top: 1px solid var(--border);
+    }
+    .eng span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font: 500 12px/1 var(--font-body);
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .list-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent) 12%, white);
+      color: var(--accent-hover);
+      font: 600 11px/1 var(--font-ui);
+    }
+    .list-thumbs {
+      display: flex;
+      gap: 6px;
+    }
+    .list-thumbs .mini-cover {
+      width: 40px;
+      height: 60px;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame" data-screen-label="01 Home">
+    <header class="nav">
+      <a class="logo" href="home.html" aria-label="Pagefold home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 2.5h4.5a2 2 0 012 2V14L7 12.5 4.5 14V4.5a2 2 0 00-2-2H3z" fill="#1E293B" opacity="0.9"/>
+            <path d="M13 2.5H8.5a2 2 0 00-2 2V14L11 12.5 13.5 14V4.5a2 2 0 00-2-2H13z" fill="#1E293B" opacity="0.55"/>
+          </svg>
+        </span>
+        <span class="logo-word">Pagefold</span>
+      </a>
+
+      <div class="search" role="search">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="4.5" stroke="#64748B" stroke-width="1.5"/>
+          <path d="M10.5 10.5L14 14" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="search" placeholder="Search books, authors, lists…" aria-label="Search books" />
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="#" class="is-active">Explore</a></li>
+        <li><a href="#">Community</a></li>
+      </ul>
+      <a class="btn-signup" href="signup.html">Sign Up</a>
+    </header>
+
+    <main class="main">
+      <section class="hero" aria-labelledby="botd-title">
+        <div class="hero-glow g1" aria-hidden="true"></div>
+        <div class="hero-glow g2" aria-hidden="true"></div>
+        <div class="hero-glow g3" aria-hidden="true"></div>
+
+        <div class="hero-kicker"><span></span> Book of the Day</div>
+
+        <div class="hero-stage">
+          <div class="cover-wrap">
+            <div class="cover-glow" aria-hidden="true"></div>
+            <article class="cover" aria-hidden="true">
+              <div class="cover-spine-label">Literary Fiction</div>
+              <h2 class="cover-title">The Salt House</h2>
+              <p class="cover-author">Mira Ellison</p>
+            </article>
+          </div>
+
+          <div class="hero-meta">
+            <h1 id="botd-title">The Salt House</h1>
+            <p class="by">Mira Ellison · River &amp; Reed, 2024</p>
+            <div class="stars" aria-label="4.8 out of 5 stars">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B" opacity="0.35"/></svg>
+              <span class="rating">4.8 · 312 reviews</span>
+            </div>
+            <p class="hero-blurb">A coastal family drama where memory and tide pull in opposite directions — quiet, precise, and hard to put down.</p>
+            <div class="hero-actions">
+              <button type="button" class="btn-primary">Read reviews</button>
+              <button type="button" class="btn-ghost">Save to list</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="feed" aria-labelledby="feed-title">
+        <div class="feed-head">
+          <h2 id="feed-title">From the community</h2>
+          <div class="tabs" role="tablist">
+            <button type="button" class="is-on" role="tab" aria-selected="true">Reviews</button>
+            <button type="button" role="tab" aria-selected="false">Lists</button>
+          </div>
+        </div>
+
+        <div class="masonry">
+          <!-- Review 1 -->
+          <article class="card">
+            <div class="card-top">
+              <div class="mini-cover mc-1" aria-hidden="true"></div>
+              <div class="card-book">
+                <h3>Orbital</h3>
+                <p class="author">Samantha Harvey</p>
+                <div class="card-stars" aria-label="5 stars">
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="user-row">
+              <div class="avatar av-1" aria-hidden="true">NK</div>
+              <div class="user-meta">
+                <div class="name">Nora K.</div>
+                <div class="when">2 hours ago</div>
+              </div>
+            </div>
+            <p class="snippet mid">Sixteen orbits, one day — and somehow it made me miss Earth more than any travel essay ever has. Sparse, luminous prose.</p>
+            <div class="eng">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 12S2 8.5 2 5.2A2.7 2.7 0 017 3.5a2.7 2.7 0 015 1.7C12 8.5 7 12 7 12z" stroke="#64748B" stroke-width="1.3"/></svg>
+                128
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3h8a1 1 0 011 1v5a1 1 0 01-1 1H7l-3 2v-2H3a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#64748B" stroke-width="1.3"/></svg>
+                24
+              </span>
+            </div>
+          </article>
+
+          <!-- List card -->
+          <article class="card">
+            <span class="list-badge">Favorite list</span>
+            <div class="user-row">
+              <div class="avatar av-2" aria-hidden="true">JM</div>
+              <div class="user-meta">
+                <div class="name">Jules M.</div>
+                <div class="when">Rainy-day novels · 12 books</div>
+              </div>
+            </div>
+            <div class="list-thumbs" aria-hidden="true">
+              <div class="mini-cover mc-2"></div>
+              <div class="mini-cover mc-3"></div>
+              <div class="mini-cover mc-4"></div>
+              <div class="mini-cover mc-5"></div>
+            </div>
+            <p class="snippet short">Slow burns and soft endings — the stack I return to when the weather turns.</p>
+            <div class="eng">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 12S2 8.5 2 5.2A2.7 2.7 0 017 3.5a2.7 2.7 0 015 1.7C12 8.5 7 12 7 12z" stroke="#64748B" stroke-width="1.3"/></svg>
+                86
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3h8a1 1 0 011 1v5a1 1 0 01-1 1H7l-3 2v-2H3a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#64748B" stroke-width="1.3"/></svg>
+                11
+              </span>
+            </div>
+          </article>
+
+          <!-- Review 2 -->
+          <article class="card">
+            <div class="card-top">
+              <div class="mini-cover mc-2" aria-hidden="true"></div>
+              <div class="card-book">
+                <h3>Tomorrow, and Tomorrow…</h3>
+                <p class="author">Gabrielle Zevin</p>
+                <div class="card-stars" aria-label="4 stars">
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B" opacity="0.3"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="user-row">
+              <div class="avatar av-3" aria-hidden="true">AR</div>
+              <div class="user-meta">
+                <div class="name">Asha R.</div>
+                <div class="when">Yesterday</div>
+              </div>
+            </div>
+            <p class="snippet tall">Friendship as a creative medium. I kept underlining lines about making something together — and the cost of staying.</p>
+            <div class="eng">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 12S2 8.5 2 5.2A2.7 2.7 0 017 3.5a2.7 2.7 0 015 1.7C12 8.5 7 12 7 12z" stroke="#64748B" stroke-width="1.3"/></svg>
+                214
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3h8a1 1 0 011 1v5a1 1 0 01-1 1H7l-3 2v-2H3a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#64748B" stroke-width="1.3"/></svg>
+                41
+              </span>
+            </div>
+          </article>
+
+          <!-- Review 3 -->
+          <article class="card">
+            <div class="card-top">
+              <div class="mini-cover mc-6" aria-hidden="true"></div>
+              <div class="card-book">
+                <h3>Piranesi</h3>
+                <p class="author">Susanna Clarke</p>
+                <div class="card-stars" aria-label="5 stars">
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="user-row">
+              <div class="avatar av-4" aria-hidden="true">TL</div>
+              <div class="user-meta">
+                <div class="name">Theo L.</div>
+                <div class="when">3 days ago</div>
+              </div>
+            </div>
+            <p class="snippet short">The House is the character. I finished it and immediately wanted to walk quieter halls.</p>
+            <div class="eng">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 12S2 8.5 2 5.2A2.7 2.7 0 017 3.5a2.7 2.7 0 015 1.7C12 8.5 7 12 7 12z" stroke="#64748B" stroke-width="1.3"/></svg>
+                97
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3h8a1 1 0 011 1v5a1 1 0 01-1 1H7l-3 2v-2H3a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#64748B" stroke-width="1.3"/></svg>
+                18
+              </span>
+            </div>
+          </article>
+
+          <!-- Review 4 -->
+          <article class="card">
+            <div class="card-top">
+              <div class="mini-cover mc-3" aria-hidden="true"></div>
+              <div class="card-book">
+                <h3>The Overstory</h3>
+                <p class="author">Richard Powers</p>
+                <div class="card-stars" aria-label="4 stars">
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B" opacity="0.3"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="user-row">
+              <div class="avatar av-5" aria-hidden="true">SC</div>
+              <div class="user-meta">
+                <div class="name">Sam C.</div>
+                <div class="when">5 days ago</div>
+              </div>
+            </div>
+            <p class="snippet mid">Trees as protagonists. Dense in the best way — reward for reading slowly.</p>
+            <div class="eng">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 12S2 8.5 2 5.2A2.7 2.7 0 017 3.5a2.7 2.7 0 015 1.7C12 8.5 7 12 7 12z" stroke="#64748B" stroke-width="1.3"/></svg>
+                63
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3h8a1 1 0 011 1v5a1 1 0 01-1 1H7l-3 2v-2H3a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#64748B" stroke-width="1.3"/></svg>
+                9
+              </span>
+            </div>
+          </article>
+
+          <!-- Review 5 -->
+          <article class="card">
+            <div class="card-top">
+              <div class="mini-cover mc-5" aria-hidden="true"></div>
+              <div class="card-book">
+                <h3>Klara and the Sun</h3>
+                <p class="author">Kazuo Ishiguro</p>
+                <div class="card-stars" aria-label="5 stars">
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.4 3.8 11.1l.6-3.6L1.8 5l3.6-.5L7 1.2z" fill="#F59E0B"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="user-row">
+              <div class="avatar av-6" aria-hidden="true">EW</div>
+              <div class="user-meta">
+                <div class="name">Elena W.</div>
+                <div class="when">1 week ago</div>
+              </div>
+            </div>
+            <p class="snippet short">Gentle and devastating. Klara’s devotion still sits with me.</p>
+            <div class="eng">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 12S2 8.5 2 5.2A2.7 2.7 0 017 3.5a2.7 2.7 0 015 1.7C12 8.5 7 12 7 12z" stroke="#64748B" stroke-width="1.3"/></svg>
+                152
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3h8a1 1 0 011 1v5a1 1 0 01-1 1H7l-3 2v-2H3a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#64748B" stroke-width="1.3"/></svg>
+                33
+              </span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

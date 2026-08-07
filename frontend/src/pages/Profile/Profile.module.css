@@ -1,0 +1,345 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* ─── Hero ─── */
+.hero {
+  background: linear-gradient(160deg, var(--surface) 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 64px 48px 48px;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 12px/1 var(--font-ui);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+.kicker span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: block; }
+
+.profileRow {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 700 28px/1 var(--font-ui);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+}
+
+.profileInfo {}
+
+.profileName {
+  font: 700 32px/1.1 var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.profileSub {
+  font: 400 15px/1 var(--font-body);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statusDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+  50%       { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.08); }
+}
+
+/* ─── Main grid ─── */
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 48px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .content { grid-template-columns: 1fr; }
+}
+
+/* ─── Stats strip ─── */
+.statsStrip {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.statCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+}
+
+.statValue {
+  font: 700 32px/1 var(--font-ui);
+  color: var(--fg);
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  font: 400 13px/1 var(--font-body);
+  color: var(--muted);
+}
+
+/* ─── Knowledge Tree ─── */
+.treeCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.sectionTitle {
+  font: 700 18px/1.2 var(--font-display);
+  color: var(--fg);
+  margin: 0 0 20px;
+}
+
+.tree {
+  position: relative;
+  width: 100%;
+  height: 280px;
+}
+
+.branch {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+}
+
+.leaf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 22px;
+  transition: transform 0.2s;
+  border: 2px solid transparent;
+}
+
+.leaf:hover { transform: scale(1.15); }
+
+.leafLabel {
+  font: 600 10px/1 var(--font-ui);
+  color: var(--muted);
+  text-align: center;
+  max-width: 60px;
+}
+
+/* ─── Bingo card ─── */
+.bingoCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.bingoGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.bingoCell {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 10px/1.3 var(--font-body);
+  color: var(--muted);
+  text-align: center;
+  padding: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  position: relative;
+}
+
+.bingoCell:hover:not(.completed) {
+  border-color: var(--muted);
+}
+
+.bingoCell.completed {
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.08));
+  border-color: var(--accent);
+  color: var(--fg);
+}
+
+.bingoCell.completed::after {
+  content: '✓';
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-size: 9px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.bingoCell.center {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  border-color: var(--accent);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.bingoProgress {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 400 12px/1 var(--font-body);
+  color: var(--muted);
+}
+
+.bingoBar {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+  margin: 0 12px;
+  overflow: hidden;
+}
+
+.bingoFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  transition: width 0.4s ease;
+}
+
+/* ─── Reading Now sidebar card ─── */
+.sideCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.currentBook {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.miniCover {
+  width: 52px;
+  height: 76px;
+  border-radius: 4px 6px 6px 4px;
+  flex-shrink: 0;
+  box-shadow: 2px 4px 12px rgba(0,0,0,0.12);
+}
+
+.bookDetails {}
+
+.bookTitle {
+  font: 700 14px/1.3 var(--font-ui);
+  color: var(--fg);
+  margin-bottom: 2px;
+}
+
+.bookAuthor {
+  font: 400 12px/1 var(--font-body);
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  font: 400 11px/1 var(--font-body);
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.progressBar {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+}
+
+/* ─── Badges ─── */
+.badgesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.badgeItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 4px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.badgeIcon {
+  font-size: 22px;
+}
+
+.badgeName {
+  font: 600 9px/1.2 var(--font-ui);
+  color: var(--muted);
+  text-align: center;
+}
+
+.badgeItem.locked {
+  opacity: 0.35;
+  filter: grayscale(1);
+}

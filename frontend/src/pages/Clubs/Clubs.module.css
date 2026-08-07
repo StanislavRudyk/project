@@ -1,0 +1,223 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.hero {
+  background: linear-gradient(160deg, var(--surface) 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 72px 48px 56px;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 12px/1 var(--font-ui);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.kicker span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: block;
+}
+
+.heroTitle {
+  font: 700 48px/1.05 var(--font-display);
+  color: var(--fg);
+  margin: 0 0 12px;
+  letter-spacing: -0.03em;
+}
+
+.heroSub {
+  font: 400 18px/1.6 var(--font-body);
+  color: var(--muted);
+  max-width: 500px;
+  margin: 0 0 32px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 12px;
+}
+
+.btnPrimary {
+  height: 48px;
+  padding: 0 24px;
+  background: var(--fg);
+  color: var(--bg);
+  font: 600 14px/1 var(--font-ui);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btnPrimary:hover { opacity: 0.85; }
+
+.btnSecondary {
+  height: 48px;
+  padding: 0 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font: 600 14px/1 var(--font-ui);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.btnSecondary:hover { border-color: var(--muted); }
+
+/* Club Grid */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px;
+}
+
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font: 500 13px/1 var(--font-ui);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filterBtn:hover,
+.filterBtn.active {
+  border-color: var(--fg);
+  color: var(--fg);
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.clubIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.clubName {
+  font: 700 18px/1.2 var(--font-ui);
+  color: var(--fg);
+  margin: 0 0 4px;
+}
+
+.clubGenre {
+  font: 500 12px/1 var(--font-body);
+  color: var(--accent);
+  background: rgba(245, 158, 11, 0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.clubDesc {
+  font: 400 14px/1.6 var(--font-body);
+  color: var(--muted);
+  margin: 0;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: auto;
+}
+
+.memberCount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 13px/1 var(--font-body);
+  color: var(--muted);
+}
+
+.memberAvatars {
+  display: flex;
+}
+
+.memberAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+  margin-left: -6px;
+  display: grid;
+  place-items: center;
+  font: 600 9px/1 var(--font-ui);
+  color: #fff;
+}
+
+.memberAvatar:first-child { margin-left: 0; }
+
+.joinBtn {
+  height: 32px;
+  padding: 0 16px;
+  background: var(--accent);
+  color: #fff;
+  font: 600 13px/1 var(--font-ui);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.joinBtn:hover { background: var(--accent-hover); }
+
+.joinBtn.joined {
+  background: var(--border);
+  color: var(--fg);
+}

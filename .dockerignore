@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+.git
+.env
+.vs/
+bin/
+obj/
+*.user
+*.suo
+.dockerignore
+Dockerfile
+docker-compose.yml
