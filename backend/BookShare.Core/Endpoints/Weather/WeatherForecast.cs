@@ -6,14 +6,12 @@ public class WeatherForecast : IEndpoint
 {
     public void MapEndpoint(WebApplication app)
     {
-        app.MapGet("weather/weatherforecast", () =>
+        app.MapGet("/me", (HttpContext context) =>
             {
-                var summaries = new[]
-                {
-                    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-                };
-                return Results.Json(summaries);
+                var id = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+                return Results.Ok(id?.Value);
             })
-            .WithTags("Weather");
+            .RequireAuthorization();
     }
 }

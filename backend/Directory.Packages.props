@@ -2,8 +2,22 @@
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
+
     <ItemGroup>
-        <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.3" />
         <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.4" />
+        <PackageVersion Include="Scalar.AspNetCore" Version="2.8.0" />
+
+        <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+
+        <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.9" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.9" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore.Analyzers" Version="10.0.9" />
+
+        <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
+        <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
+
+        <PackageVersion Include="BCrypt.Net-Next" Version="4.2.0" />
     </ItemGroup>
 </Project>

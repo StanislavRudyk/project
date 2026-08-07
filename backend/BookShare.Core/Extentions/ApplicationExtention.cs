@@ -1,3 +1,5 @@
+using Scalar.AspNetCore;
+
 namespace BookShare.Core.Extentions;
 
 public static class ApplicationExtention
@@ -6,17 +8,22 @@ public static class ApplicationExtention
     {
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
+            app.MapOpenApi();
+
+            app.MapScalarApiReference(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "TODO Sharp API v1");
-                options.RoutePrefix = string.Empty;
+                options.Title = "BookShare API";
             });
+
+            app.MapGet("/", () => Results.Redirect("/scalar"));
         }
 
         app.UseHttpsRedirection();
+
+        app.UseForwardedHeaders();
         app.UseAuthentication();
         app.UseAuthorization();
+
         app.MapEndpoints();
         app.MapControllers();
 

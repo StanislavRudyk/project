@@ -1,6 +1,19 @@
+using System.Text;
 using System.Text.Json;
+using BookShare.Core.Endpoints.Auth.Login;
+using BookShare.Core.Endpoints.Auth.Refresh;
+using BookShare.Core.Endpoints.Auth.Registration;
 using BookShare.Core.EndpointSettings;
-using Microsoft.OpenApi;
+using BookShare.Core.Settings;
+using BookShare.Domain.Abstractions;
+using BookShare.Infrastructure.Postgres.Configuration;
+using BookShare.Infrastructure.Postgres.DatabaseSettings;
+using BookShare.Infrastructure.Postgres.Repository;
+using BookShare.Infrastructure.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookShare.Core.Extentions;
 
@@ -8,51 +21,87 @@ public static class BuilderExtention
 {
     public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers()    
-        .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        });
-        builder.Services.AddResponseCompression(options =>
-        {
-            options.EnableForHttps = true;
-        });
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
+
         builder.Services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         });
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(options =>
+
+        builder.Services.AddResponseCompression(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo
+            options.EnableForHttps = true;
+        });
+
+        builder.Services.AddOpenApi(options =>
+        {
+            options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
-                Title = "BookShare API",
-                Version = "v1",
-                Description = "API",
-                License = new OpenApiLicense
-                {
-                    Name = "MIT"
-                }
+                document.Info.Title = "BookShare API";
+                document.Info.Version = "v1";
+                document.Info.Description = "REST API для BookShare";
+
+                return Task.CompletedTask;
             });
-            
-            
-            // Когда будет JWT
-            // options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            // {
-            //     Type = SecuritySchemeType.ApiKey,
-            //     Name = "Cookie",
-            //     In = ParameterLocation.Cookie,
-            //     Description = "JWT Authorization header"
-            // });
         });
 
         return builder;
     }
+    
+    public static WebApplicationBuilder AddDatabase(this WebApplicationBuilder builder)
+    {
+        var databaseSettings = builder.Configuration
+            .GetSection(DatabaseOptions.SectionName)
+            .Get<DatabaseOptions>();
 
-    // public static WebApplicationBuilder AddDependencyInjection(this WebApplicationBuilder builder)
-    // {
-    //     return builder;
-    // }
+        if (string.IsNullOrEmpty(databaseSettings?.ConnectionString))
+        {
+            throw new InvalidOperationException($"Configuration section '{DatabaseOptions.SectionName}' is missing or incomplete.");
+        }
+
+        builder.Services.AddDbContext<DataContext>(options =>
+            options.UseNpgsql(databaseSettings.ConnectionString));
+
+        return builder;
+    }
+    
+    public static WebApplicationBuilder AddDependencyInjection(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<RegistrationHandler>();
+        builder.Services.AddScoped<LoginHandler>();
+        builder.Services.AddScoped<RefreshHandler>();
+
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IRefreshSessionRepository, RefreshSessionRepository>();
+
+        builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+        builder.Services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
+        builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
+        builder.Services.AddScoped<ITokenHasher, TokenHasher>();
+
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        builder.Services.AddScoped<DbContext, DataContext>();
+        
+        builder.Services.Configure<JwtOptions>(
+            builder.Configuration.GetSection(JwtOptions.SectionName));
+        
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders =
+                ForwardedHeaders.XForwardedFor |
+                ForwardedHeaders.XForwardedProto;
+
+            options.KnownNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
+        
+        return builder;
+    }
     
     
     // Политики CORS
@@ -89,5 +138,46 @@ public static class BuilderExtention
         }
 
         return app;
+    }
+    
+    public static WebApplicationBuilder AddAuthenticationServices(
+        this WebApplicationBuilder builder)
+    {
+        var jwt = builder.Configuration
+                      .GetSection(JwtOptions.SectionName)
+                      .Get<JwtOptions>()
+                  ?? throw new InvalidOperationException("JwtOptions not configured.");
+
+        builder.Services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = jwt.Issuer,
+                    ValidAudience = jwt.Audience,
+
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwt.SecretKey))
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["access_token"];
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+        builder.Services.AddAuthorization();
+
+        return builder;
     }
 }
