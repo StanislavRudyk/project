@@ -29,3 +29,39 @@ back-run:
 	@echo "Running backend..."
 	cd $(BACKEND) && \
 	dotnet run --project $(STARTUP_PROJECT)
+
+front-build:
+	@echo "Building frontend..."
+	cd frontend && \
+	npm install && \
+	npm run build
+
+front-run:
+	@echo "Running frontend..."
+	cd frontend && \
+	npm install && \
+	npm run start
+
+docker-compose-up:
+	@echo "Starting Docker Compose..."
+	docker-compose up -d
+
+docker-compose-down:
+	@echo "Stopping Docker Compose..."
+	docker-compose down
+
+docker-compose-restart:
+	@echo "Restarting Docker Compose..."
+	docker-compose down && docker-compose up -d	
+
+docker-compose-logs:
+	@echo "Showing Docker Compose logs..."
+	docker-compose logs -f
+
+docker-compose-build:
+	@echo "Building Docker Compose services..."
+	docker-compose build
+
+docker-compose-up-db:
+	@echo "Starting Docker Compose with database..."
+	docker-compose up -d db
