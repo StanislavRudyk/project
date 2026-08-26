@@ -43,7 +43,7 @@ services:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      DatabaseSettings__ConnectionString: Host=db;Port=5432;Database=bookshare_db;Username=admin;Password=admin123
+      DatabaseSettings__ConnectionString: Host=db;Port=5432;Database=bookshare;Username=postgres;Password=postgres
     ports:
       - "5000:8080"
   frontend:
