@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookShare.Infrastructure.Postgres.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260826072000_AddBooks")]
-    partial class AddBooks
+    [Migration("20260831200442_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,74 @@ namespace BookShare.Infrastructure.Postgres.Migrations
                     b.HasIndex("UploadedById");
 
                     b.ToTable("books", (string)null);
+                });
+
+            modelBuilder.Entity("BookShare.Domain.Models.Edition", b =>
+                {
+                    b.Property<Guid>("Identifier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CoverUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int?>("PublicationYear")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Translator")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<Guid>("WorkIdentifier")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Identifier");
+
+                    b.HasIndex("WorkIdentifier");
+
+                    b.ToTable("editions", (string)null);
+                });
+
+            modelBuilder.Entity("BookShare.Domain.Models.FileAsset", b =>
+                {
+                    b.Property<string>("Hash")
+                        .HasColumnType("char(64)");
+
+                    b.Property<string>("ContentHash")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EditionIdentifier")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDmcaBanned")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<long>("SizeInBytes")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Hash");
+
+                    b.HasIndex("EditionIdentifier");
+
+                    b.ToTable("file_assets", (string)null);
                 });
 
             modelBuilder.Entity("BookShare.Domain.Models.RefreshSession", b =>
@@ -176,6 +244,57 @@ namespace BookShare.Infrastructure.Postgres.Migrations
                     b.ToTable("user_books", (string)null);
                 });
 
+            modelBuilder.Entity("BookShare.Domain.Models.UserLibrary", b =>
+                {
+                    b.Property<Guid>("Identifier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FileAssetHash")
+                        .IsRequired()
+                        .HasColumnType("char(64)");
+
+                    b.HasKey("Identifier");
+
+                    b.HasIndex("FileAssetHash");
+
+                    b.ToTable("user_libraries", (string)null);
+                });
+
+            modelBuilder.Entity("BookShare.Domain.Models.Work", b =>
+                {
+                    b.Property<Guid>("Identifier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<DateOnly?>("DateOfFirstPublication")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Genres")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<double?>("GlobalRanking")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("OriginalTitle")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.HasKey("Identifier");
+
+                    b.ToTable("works", (string)null);
+                });
+
             modelBuilder.Entity("BookShare.Domain.Models.Book", b =>
                 {
                     b.HasOne("BookShare.Domain.Models.User", null)
@@ -183,6 +302,28 @@ namespace BookShare.Infrastructure.Postgres.Migrations
                         .HasForeignKey("UploadedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BookShare.Domain.Models.Edition", b =>
+                {
+                    b.HasOne("BookShare.Domain.Models.Work", "Work")
+                        .WithMany("Editions")
+                        .HasForeignKey("WorkIdentifier")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Work");
+                });
+
+            modelBuilder.Entity("BookShare.Domain.Models.FileAsset", b =>
+                {
+                    b.HasOne("BookShare.Domain.Models.Edition", "Edition")
+                        .WithMany("FileAssets")
+                        .HasForeignKey("EditionIdentifier")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Edition");
                 });
 
             modelBuilder.Entity("BookShare.Domain.Models.RefreshSession", b =>
@@ -215,9 +356,30 @@ namespace BookShare.Infrastructure.Postgres.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BookShare.Domain.Models.UserLibrary", b =>
+                {
+                    b.HasOne("BookShare.Domain.Models.FileAsset", "FileAsset")
+                        .WithMany()
+                        .HasForeignKey("FileAssetHash")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FileAsset");
+                });
+
+            modelBuilder.Entity("BookShare.Domain.Models.Edition", b =>
+                {
+                    b.Navigation("FileAssets");
+                });
+
             modelBuilder.Entity("BookShare.Domain.Models.User", b =>
                 {
                     b.Navigation("RefreshSessions");
+                });
+
+            modelBuilder.Entity("BookShare.Domain.Models.Work", b =>
+                {
+                    b.Navigation("Editions");
                 });
 #pragma warning restore 612, 618
         }
