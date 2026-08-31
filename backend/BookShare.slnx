@@ -1,8 +1,6 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="..\.env.dev" />
-    <File Path="..\docker-compose.yml" />
-    <File Path="..\Makefile" />
+    <File Path="compose.yaml" />
   </Folder>
   <Project Path="BookShare.Core/BookShare.Core.csproj" />
   <Project Path="BookShare.Domain/BookShare.Domain.csproj" />

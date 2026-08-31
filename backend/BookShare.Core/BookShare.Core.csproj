@@ -20,4 +20,7 @@
       <ProjectReference Include="..\BookShare.Domain\BookShare.Domain.csproj" />
       <ProjectReference Include="..\BookShare.Infrastructure.Postgres\BookShare.Infrastructure.Postgres.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Endpoints\Auth\Logout\" />
+    </ItemGroup>
 </Project>

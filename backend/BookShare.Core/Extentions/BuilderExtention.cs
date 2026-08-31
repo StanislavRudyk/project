@@ -1,8 +1,6 @@
 using System.Text;
 using System.Text.Json;
 using BookShare.Core.Endpoints.Auth.Login;
-using BookShare.Core.Endpoints.Auth.Logout;
-using BookShare.Core.Endpoints.Auth.LogoutAll;
 using BookShare.Core.Endpoints.Auth.Refresh;
 using BookShare.Core.Endpoints.Auth.Registration;
 using BookShare.Core.EndpointSettings;
@@ -76,8 +74,6 @@ public static class BuilderExtention
         builder.Services.AddScoped<RegistrationHandler>();
         builder.Services.AddScoped<LoginHandler>();
         builder.Services.AddScoped<RefreshHandler>();
-        builder.Services.AddScoped<LogoutHandler>();
-        builder.Services.AddScoped<LogoutAllHandler>();
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IRefreshSessionRepository, RefreshSessionRepository>();

@@ -7,18 +7,11 @@ public sealed class DataContext : DbContext
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
-
-    public DbSet<Book> Books => Set<Book>();
-    public DbSet<UserBook> UserBooks => Set<UserBook>();
-
-    public DataContext(DbContextOptions<DataContext> options)
-        : base(options)
-    {
-    }
+    
+    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(
-            typeof(DataContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
     }
 }
