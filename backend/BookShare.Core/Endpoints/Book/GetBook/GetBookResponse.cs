@@ -1,9 +1,8 @@
-using BookShare.Core.Endpoints.Book.GetBook;
 using BookShare.Domain.ValueObject;
 
-namespace BookShare.Core.Endpoints.Book.GetBooks;
+namespace BookShare.Core.Endpoints.Book.GetBook;
 
-public sealed record GetBooksResponse(
+public sealed record GetBookResponse(
     Guid Id,
     string Title,
     string? Description,

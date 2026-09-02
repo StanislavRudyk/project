@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using BookShare.Core.Endpoints.Book.GetBook;
 using BookShare.Domain.Abstractions;
 
 namespace BookShare.Core.Endpoints.Book.GetBooks;
@@ -33,7 +34,12 @@ public sealed class GetBooksHandler
                 book.Description,
                 book.Author,
                 book.CoverKey,
-                book.FileSize,
+                book.Files
+                    .Select(file => new BookFileResponse(
+                        file.Id,
+                        file.Format,
+                        file.FileSize))
+                    .ToList(),
                 book.CreatedAt))
             .ToList();
     }

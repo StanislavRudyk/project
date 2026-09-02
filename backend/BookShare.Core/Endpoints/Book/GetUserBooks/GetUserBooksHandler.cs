@@ -1,4 +1,4 @@
-using BookShare.Core.Endpoints.Book.GetBooks;
+using BookShare.Core.Endpoints.Book.GetBook;
 using BookShare.Domain.Abstractions;
 
 namespace BookShare.Core.Endpoints.Book.GetUserBooks;
@@ -12,7 +12,7 @@ public sealed class GetUserBooksHandler
         _userBooks = userBooks;
     }
 
-    public async Task<IReadOnlyList<GetBooksResponse>> HandleAsync(
+    public async Task<IReadOnlyList<GetBookResponse>> HandleAsync(
         Guid userId,
         CancellationToken cancellationToken = default)
     {
@@ -21,13 +21,18 @@ public sealed class GetUserBooksHandler
             cancellationToken);
 
         return books
-            .Select(book => new GetBooksResponse(
+            .Select(book => new GetBookResponse(
                 book.Id,
                 book.Title,
                 book.Description,
                 book.Author,
                 book.CoverKey,
-                book.FileSize,
+                book.Files
+                    .Select(file => new BookFileResponse(
+                        file.Id,
+                        file.Format,
+                        file.FileSize))
+                    .ToList(),
                 book.CreatedAt))
             .ToList();
     }

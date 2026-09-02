@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BookShare.Core.EndpointSettings;
+using BookShare.Domain.Enums;
 
 namespace BookShare.Core.Endpoints.Book.GetBookFile;
 
@@ -17,6 +18,7 @@ public sealed class GetBookFileEndpoint : IEndpoint
 
     private static async Task<IResult> Handle(
         Guid bookId,
+        BookFormat format,
         HttpContext context,
         GetBookFileHandler handler,
         CancellationToken cancellationToken)
@@ -30,6 +32,7 @@ public sealed class GetBookFileEndpoint : IEndpoint
         var url = await handler.HandleAsync(
             userId,
             bookId,
+            format,
             cancellationToken);
 
         if (url is null)

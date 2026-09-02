@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using BookShare.Core.Endpoints.Auth.Login;
 using BookShare.Core.Endpoints.Auth.Logout;
 using BookShare.Core.Endpoints.Auth.LogoutAll;
@@ -65,6 +66,12 @@ public static class BuilderExtention
         });
         
         builder.Services.AddAntiforgery();
+        
+        builder.Services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(
+                new JsonStringEnumConverter());
+        });
         
         return builder;
     }

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using BookShare.Domain.Abstractions;
+using BookShare.Domain.Enums;
 using BookShare.Domain.Models;
 using BookShare.Domain.ValueObject;
 using BookShare.Infrastructure.Postgres.Pdf;
@@ -43,9 +44,8 @@ public sealed class UploadBookHandler
         if (request.File is null || request.File.Length == 0)
             throw new InvalidOperationException("File is empty.");
 
-        if (request.File.ContentType != "application/pdf")
-            throw new InvalidOperationException(
-                "Only PDF files are allowed.");
+        var format = BookFormatDetector.Detect(
+            request.File.FileName);
 
         await using var stream = request.File.OpenReadStream();
 
@@ -124,11 +124,17 @@ public sealed class UploadBookHandler
             BookTitle.Create(request.Title),
             request.Description,
             request.Author,
-            FileKey.Create(fileKey),
             null,
-            fileHash,
-            request.File.Length,
             userId);
+
+        var bookFile = new BookFile(
+            book.Id,
+            format,
+            FileKey.Create(fileKey),
+            fileHash,
+            request.File.Length);
+
+        book.AddFile(bookFile);
 
         CoverKey coverKey;
 
@@ -149,6 +155,12 @@ public sealed class UploadBookHandler
         }
         else
         {
+            if (format != BookFormat.Pdf)
+            {
+                throw new InvalidOperationException(
+                    $"Для формата {format} необходимо загрузить обложку.");
+            }
+
             stream.Position = 0;
 
             await using var generatedCover =
@@ -160,8 +172,7 @@ public sealed class UploadBookHandler
                     book.Id,
                     cancellationToken);
 
-            coverKey = CoverKey.Create(
-                generatedCoverKey);
+            coverKey = CoverKey.Create(generatedCoverKey);
         }
 
         book.SetCoverKey(coverKey);

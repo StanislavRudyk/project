@@ -1,4 +1,5 @@
 using BookShare.Domain.Abstractions;
+using BookShare.Domain.Enums;
 
 namespace BookShare.Core.Endpoints.Book.GetBookFile;
 
@@ -18,6 +19,7 @@ public sealed class GetBookFileHandler
     public async Task<string?> HandleAsync(
         Guid userId,
         Guid bookId,
+        BookFormat format,
         CancellationToken cancellationToken = default)
     {
         var book = await _userBooks.GetBookByUserIdAsync(
@@ -28,8 +30,14 @@ public sealed class GetBookFileHandler
         if (book is null)
             return null;
 
+        var bookFile = book.Files
+            .FirstOrDefault(file => file.Format == format);
+
+        if (bookFile is null)
+            return null;
+
         return await _fileStorage.GetPresignedUrlAsync(
-            book.FileKey,
+            bookFile.FileKey,
             cancellationToken: cancellationToken);
     }
 }

@@ -35,29 +35,34 @@ public sealed class UserBookRepository : IUserBookRepository
             cancellationToken);
     }
     
-    public async Task<IReadOnlyList<Book>> GetBooksByUserIdAsync(
-        Guid userId,
-        CancellationToken cancellationToken = default)
-    {
-        return await _context.UserBooks
-            .Where(ub => ub.UserId == userId)
-            .Select(ub => ub.Book)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
-    }
-    
     public async Task<Book?> GetBookByUserIdAsync(
         Guid userId,
         Guid bookId,
         CancellationToken cancellationToken = default)
     {
-        return await _context.UserBooks
-            .Where(ub =>
-                ub.UserId == userId &&
-                ub.BookId == bookId)
-            .Select(ub => ub.Book)
+        return await _context.Books
+            .Where(book =>
+                book.Id == bookId &&
+                _context.UserBooks.Any(userBook =>
+                    userBook.UserId == userId &&
+                    userBook.BookId == book.Id))
+            .Include(book => book.Files)
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
+    }
+    
+    public async Task<IReadOnlyList<Book>> GetBooksByUserIdAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Books
+            .Where(book => _context.UserBooks
+                .Any(userBook =>
+                    userBook.UserId == userId &&
+                    userBook.BookId == book.Id))
+            .Include(book => book.Files)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
     
     public async Task DeleteAsync(

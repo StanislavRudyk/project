@@ -21,7 +21,7 @@ public class BookRepository : IBookRepository
     {
         return await _context.Books
             .FirstOrDefaultAsync(
-                book => book.FileHash == fileHash,
+                book => book.Files.Any(file => file.FileHash == fileHash),
                 cancellationToken);
     }
 
@@ -31,6 +31,7 @@ public class BookRepository : IBookRepository
     {
         return await _context.Books
             .AsNoTracking()
+            .Include(book => book.Files)
             .FirstOrDefaultAsync(
                 book => book.Id == bookId,
                 cancellationToken);
