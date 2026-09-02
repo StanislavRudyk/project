@@ -1,8 +1,14 @@
 namespace BookShare.Core.Endpoints.Book.UploadBook;
 
-public sealed record UploadBookRequest(
-    IFormFile File,
-    string Title,
-    string? Description,
-    string? Author
-);
+public sealed class UploadBookRequest
+{
+    public IFormFile File { get; init; } = null!;
+
+    public IFormFile? Cover { get; init; }
+
+    public string Title { get; init; } = null!;
+
+    public string? Description { get; init; }
+
+    public string? Author { get; init; }
+}

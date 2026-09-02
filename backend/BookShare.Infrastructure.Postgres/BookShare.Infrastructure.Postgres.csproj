@@ -9,6 +9,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design"/>
         <PackageReference Include="BCrypt.Net-Next"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+        <PackageReference Include="PDFtoImage"/>
     </ItemGroup>
 
     <ItemGroup>

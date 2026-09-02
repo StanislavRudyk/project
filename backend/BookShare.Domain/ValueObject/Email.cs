@@ -14,14 +14,16 @@ public readonly record struct Email
     public static Email Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentException("Email cannot be empty.", nameof(value));
-        }
+            throw new ArgumentException(
+                "Email cannot be empty.",
+                nameof(value));
+
+        value = value.Trim().ToLowerInvariant();
 
         if (!EmailRegex.IsMatch(value))
-        {
-            throw new ArgumentException("Invalid email format.", nameof(value));
-        }
+            throw new ArgumentException(
+                "Invalid email format.",
+                nameof(value));
 
         return new Email(value);
     }

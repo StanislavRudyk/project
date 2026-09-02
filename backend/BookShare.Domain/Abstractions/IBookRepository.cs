@@ -1,11 +1,16 @@
 using BookShare.Domain.Models;
+using BookShare.Domain.ValueObject;
 
 namespace BookShare.Domain.Abstractions;
 
 public interface IBookRepository
 {
     Task<Book?> FindByFileHashAsync(
-        string fileHash,
+        FileHash fileHash,
+        CancellationToken cancellationToken);
+
+    Task<Book?> GetByIdAsync(
+        Guid bookId,
         CancellationToken cancellationToken = default);
 
     Task AddAsync(

@@ -1,3 +1,4 @@
+using BookShare.Domain.ValueObject;
 
 namespace BookShare.Domain.Models;
 
@@ -5,17 +6,17 @@ public sealed class Book
 {
     public Guid Id { get; private set; }
 
-    public string Title { get; private set; } = null!;
+    public BookTitle Title { get; private set; }
 
     public string? Description { get; private set; }
 
     public string? Author { get; private set; }
 
-    public string? CoverKey { get; private set; }
+    public CoverKey? CoverKey { get; private set; }
 
-    public string FileKey { get; private set; } = null!;
+    public FileKey FileKey { get; private set; }
 
-    public string FileHash { get; private set; } = null!;
+    public FileHash FileHash { get; private set; }
 
     public long FileSize { get; private set; }
 
@@ -28,14 +29,20 @@ public sealed class Book
     }
 
     public Book(
-        string title,
+        BookTitle title,
         string? description,
         string? author,
-        string fileKey,
-        string fileHash,
+        FileKey fileKey,
+        CoverKey? coverKey,
+        FileHash fileHash,
         long fileSize,
         Guid uploadedById)
     {
+        if (fileSize <= 0)
+            throw new ArgumentOutOfRangeException(
+                nameof(fileSize),
+                "Размер файла должен быть больше нуля.");
+
         Id = Guid.NewGuid();
 
         Title = title;
@@ -43,10 +50,17 @@ public sealed class Book
         Author = author;
 
         FileKey = fileKey;
+        CoverKey = coverKey;
+
         FileHash = fileHash;
         FileSize = fileSize;
 
         UploadedById = uploadedById;
         CreatedAt = DateTimeOffset.UtcNow;
+    }
+
+    public void SetCoverKey(CoverKey coverKey)
+    {
+        CoverKey = coverKey;
     }
 }

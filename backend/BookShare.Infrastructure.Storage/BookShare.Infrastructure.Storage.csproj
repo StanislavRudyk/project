@@ -2,4 +2,12 @@
     <PropertyGroup>
       <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Minio" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\BookShare.Domain\BookShare.Domain.csproj" />
+    </ItemGroup>
 </Project>

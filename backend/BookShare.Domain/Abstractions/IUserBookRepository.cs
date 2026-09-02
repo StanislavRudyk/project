@@ -12,4 +12,18 @@ public interface IUserBookRepository
     Task AddAsync(
         UserBook userBook,
         CancellationToken cancellationToken = default);
+    
+    Task<IReadOnlyList<Book>> GetBooksByUserIdAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default);
+    
+    Task<Book?> GetBookByUserIdAsync(
+        Guid userId,
+        Guid bookId,
+        CancellationToken cancellationToken = default);
+    
+    Task DeleteAsync(
+        Guid userId,
+        Guid bookId,
+        CancellationToken cancellationToken = default);
 }

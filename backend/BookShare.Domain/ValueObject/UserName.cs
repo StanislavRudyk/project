@@ -20,7 +20,6 @@ public readonly record struct UserName
         
         if (!value.All(char.IsLetterOrDigit))
             throw new ArgumentException("Имя может содержать только буквы и цифры.");
-        
         return new UserName(value);
     }
 

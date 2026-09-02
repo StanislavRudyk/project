@@ -21,8 +21,10 @@ public static class ApplicationExtention
         app.UseHttpsRedirection();
 
         app.UseForwardedHeaders();
+        app.UseCors("AllowAll");
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseAntiforgery();
 
         app.MapEndpoints();
         app.MapControllers();

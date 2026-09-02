@@ -5,17 +5,30 @@ using BookShare.Core.Endpoints.Auth.Logout;
 using BookShare.Core.Endpoints.Auth.LogoutAll;
 using BookShare.Core.Endpoints.Auth.Refresh;
 using BookShare.Core.Endpoints.Auth.Registration;
+using BookShare.Core.Endpoints.Book.AddBook;
+using BookShare.Core.Endpoints.Book.DeleteBook;
+using BookShare.Core.Endpoints.Book.GetBook;
+using BookShare.Core.Endpoints.Book.GetBookCover;
+using BookShare.Core.Endpoints.Book.GetBookFile;
+using BookShare.Core.Endpoints.Book.GetBooks;
+using BookShare.Core.Endpoints.Book.UploadBook;
+using BookShare.Core.Endpoints.Book.GetUserBooks;
 using BookShare.Core.EndpointSettings;
 using BookShare.Core.Settings;
 using BookShare.Domain.Abstractions;
 using BookShare.Infrastructure.Postgres.Configuration;
 using BookShare.Infrastructure.Postgres.DatabaseSettings;
+using BookShare.Infrastructure.Postgres.Pdf;
+using BookShare.Infrastructure.Postgres.Repositories;
 using BookShare.Infrastructure.Postgres.Repository;
 using BookShare.Infrastructure.Security;
+using BookShare.Infrastructure.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Minio;
 
 namespace BookShare.Core.Extentions;
 
@@ -50,7 +63,9 @@ public static class BuilderExtention
                 return Task.CompletedTask;
             });
         });
-
+        
+        builder.Services.AddAntiforgery();
+        
         return builder;
     }
     
@@ -73,38 +88,77 @@ public static class BuilderExtention
     
     public static WebApplicationBuilder AddDependencyInjection(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<RegistrationHandler>();
-        builder.Services.AddScoped<LoginHandler>();
-        builder.Services.AddScoped<RefreshHandler>();
-        builder.Services.AddScoped<LogoutHandler>();
-        builder.Services.AddScoped<LogoutAllHandler>();
+            // Handlers
+            builder.Services.AddScoped<RegistrationHandler>();
+            builder.Services.AddScoped<LoginHandler>();
+            builder.Services.AddScoped<RefreshHandler>();
+            builder.Services.AddScoped<LogoutHandler>();
+            builder.Services.AddScoped<LogoutAllHandler>();
+            builder.Services.AddScoped<UploadBookHandler>();
+            builder.Services.AddScoped<GetBooksHandler>();
+            builder.Services.AddScoped<GetBookHandler>();
+            builder.Services.AddScoped<AddBookHandler>();
+            builder.Services.AddScoped<DeleteBookHandler>();
+            builder.Services.AddScoped<GetUserBooksHandler>();
+            builder.Services.AddScoped<GetBookFileHandler>();
+            builder.Services.AddScoped<GetBookCoverHandler>();
 
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<IRefreshSessionRepository, RefreshSessionRepository>();
+            // Repositories
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IRefreshSessionRepository, RefreshSessionRepository>();
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<IUserBookRepository, UserBookRepository>();
 
-        builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-        builder.Services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
-        builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
-        builder.Services.AddScoped<ITokenHasher, TokenHasher>();
+            // Security
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
+            builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
+            builder.Services.AddScoped<ITokenHasher, TokenHasher>();
 
-        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            // Unit of Work
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        builder.Services.AddScoped<DbContext, DataContext>();
-        
-        builder.Services.Configure<JwtOptions>(
-            builder.Configuration.GetSection(JwtOptions.SectionName));
-        
-        builder.Services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders =
-                ForwardedHeaders.XForwardedFor |
-                ForwardedHeaders.XForwardedProto;
+            builder.Services.AddScoped<DbContext, DataContext>();
+            builder.Services.AddScoped<PdfCoverGenerator>();
 
-            options.KnownNetworks.Clear();
-            options.KnownProxies.Clear();
-        });
-        
-        return builder;
+            builder.Services.Configure<JwtOptions>(
+                builder.Configuration.GetSection(JwtOptions.SectionName));
+
+            // Forwarded Headers
+            builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor |
+                    ForwardedHeaders.XForwardedProto;
+
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
+            
+            builder.Services.Configure<MinioOptions>(
+                builder.Configuration.GetSection(
+                    MinioOptions.SectionName));
+
+            builder.Services.AddSingleton<IMinioClient>(sp =>
+            {
+                var options = sp
+                    .GetRequiredService<IOptions<MinioOptions>>()
+                    .Value;
+
+                return new MinioClient()
+                    .WithEndpoint(options.Endpoint)
+                    .WithCredentials(
+                        options.AccessKey,
+                        options.SecretKey)
+                    .WithSSL(options.UseSsl)
+                    .Build();
+            });
+
+            builder.Services.AddScoped<
+                IBookFileStorage,
+                MinioBookFileStorage>();
+            
+            return builder;
     }
     
     

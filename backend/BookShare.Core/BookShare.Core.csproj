@@ -19,5 +19,6 @@
     <ItemGroup>
       <ProjectReference Include="..\BookShare.Domain\BookShare.Domain.csproj" />
       <ProjectReference Include="..\BookShare.Infrastructure.Postgres\BookShare.Infrastructure.Postgres.csproj" />
+      <ProjectReference Include="..\BookShare.Infrastructure.Storage\BookShare.Infrastructure.Storage.csproj" />
     </ItemGroup>
 </Project>
