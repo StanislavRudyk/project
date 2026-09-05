@@ -1,30 +1,44 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS restore
+
 WORKDIR /src
 
-# Copy solution and configuration files
 COPY BookShare.slnx .
 COPY Directory.Build.props .
 COPY Directory.Packages.props .
 
-# Copy project files
-COPY BookShare.Core/*.csproj ./BookShare.Core/
-COPY BookShare.Domain/*.csproj ./BookShare.Domain/
-COPY BookShare.Infrastructure.Postgres/*.csproj ./BookShare.Infrastructure.Postgres/
-COPY BookShare.Infrastructure.Storage/*.csproj ./BookShare.Infrastructure.Storage/
+COPY BookShare.Core/*.csproj BookShare.Core/
+COPY BookShare.Domain/*.csproj BookShare.Domain/
+COPY BookShare.Infrastructure.Postgres/*.csproj BookShare.Infrastructure.Postgres/
+COPY BookShare.Infrastructure.Storage/*.csproj BookShare.Infrastructure.Storage/
 
-# Restore dependencies
 RUN dotnet restore BookShare.slnx
 
-# Copy full source code
+
+FROM restore AS build
+
+WORKDIR /src
+
 COPY . .
 
-# Build and publish
-WORKDIR /src/BookShare.Core
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet build BookShare.Core/BookShare.Core.csproj \
+    -c Release \
+    --no-restore
 
-# Runtime image
+
+FROM build AS publish
+
+RUN dotnet publish BookShare.Core/BookShare.Core.csproj \
+    -c Release \
+    -o /app/publish \
+    --no-restore
+
+
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+
 WORKDIR /app
-COPY --from=build /app/publish .
+
+COPY --from=publish /app/publish .
+
 EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "BookShare.Core.dll"]

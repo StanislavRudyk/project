@@ -9,7 +9,8 @@ builder
     .AddDatabase()
     .AddDependencyInjection()
     .AddAuthenticationServices()
-    .AddCorsPolicy();
+    .AddCorsPolicy()
+    .AddHealthChecks();
 
 var app = builder.Build();
 

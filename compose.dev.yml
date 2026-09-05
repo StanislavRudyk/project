@@ -57,6 +57,7 @@ services:
       Jwt__SecretKey: ${JWT_SECRET_KEY}
       
       Minio__Endpoint: minio:9000
+      Minio__PublicEndpoint: localhost:9000
       Minio__AccessKey: ${MINIO_ROOT_USER:-bookshare}
       Minio__SecretKey: ${MINIO_ROOT_PASSWORD:-bookshare_password}
       Minio__BucketName: bookshare
@@ -65,22 +66,6 @@ services:
     ports:
       - "5000:8080"
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: bookshare_frontend
-    restart: unless-stopped
-    depends_on:
-      - backend
-    environment:
-      VITE_API_URL: http://localhost:5000
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-  
   minio:
     image: minio/minio
     container_name: bookshare-minio

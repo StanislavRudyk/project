@@ -109,6 +109,8 @@ public static class BuilderExtention
             builder.Services.AddScoped<GetUserBooksHandler>();
             builder.Services.AddScoped<GetBookFileHandler>();
             builder.Services.AddScoped<GetBookCoverHandler>();
+            builder.Services.AddScoped<BookCoverGenerator>();
+            builder.Services.AddScoped<BookUploadPreparationService>();
 
             // Repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -126,7 +128,7 @@ public static class BuilderExtention
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<DbContext, DataContext>();
-            builder.Services.AddScoped<PdfCoverGenerator>();
+            builder.Services.AddScoped<IBookCoverGenerator, PdfBookCoverGenerator>();
 
             builder.Services.Configure<JwtOptions>(
                 builder.Configuration.GetSection(JwtOptions.SectionName));
@@ -242,6 +244,14 @@ public static class BuilderExtention
             });
 
         builder.Services.AddAuthorization();
+
+        return builder;
+    }
+
+    public static WebApplicationBuilder AddHealthChecks(
+    this WebApplicationBuilder builder)
+    {
+        builder.Services.AddHealthChecks();
 
         return builder;
     }

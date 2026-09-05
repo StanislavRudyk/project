@@ -1,4 +1,8 @@
-bin
-obj
+**/bin
+**/obj
 .git
+.gitignore
 .vscode
+.idea
+*.user
+*.suo

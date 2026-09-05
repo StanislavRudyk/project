@@ -8,6 +8,7 @@ namespace BookShare.Infrastructure.Storage;
 public sealed class MinioBookFileStorage : IBookFileStorage
 {
     private readonly IMinioClient _minio;
+    private readonly IMinioClient _publicMinio;
     private readonly MinioOptions _options;
 
     public MinioBookFileStorage(
@@ -16,6 +17,14 @@ public sealed class MinioBookFileStorage : IBookFileStorage
     {
         _minio = minio;
         _options = options.Value;
+
+        _publicMinio = new MinioClient()
+            .WithEndpoint(_options.PublicEndpoint)
+            .WithCredentials(
+                _options.AccessKey,
+                _options.SecretKey)
+            .WithSSL(_options.UseSsl)
+            .Build();
     }
 
     public async Task<string> UploadAsync(
@@ -52,9 +61,9 @@ public sealed class MinioBookFileStorage : IBookFileStorage
             .WithObject(fileKey)
             .WithExpiry(expirySeconds);
 
-        return await _minio.PresignedGetObjectAsync(args);
+        return await _publicMinio.PresignedGetObjectAsync(args);
     }
-    
+
     public async Task<string> UploadCoverAsync(
         Stream stream,
         Guid bookId,
@@ -75,7 +84,7 @@ public sealed class MinioBookFileStorage : IBookFileStorage
 
         return fileKey;
     }
-    
+
     public async Task<Stream> GetAsync(
         string fileKey,
         CancellationToken cancellationToken = default)

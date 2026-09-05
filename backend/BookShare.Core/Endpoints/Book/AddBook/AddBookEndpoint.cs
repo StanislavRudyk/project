@@ -6,7 +6,7 @@ public sealed class AddBookEndpoint : IEndpoint
 {
     public void MapEndpoint(WebApplication app)
     {
-        app.MapPost("/api/books/{bookId:guid}", Handle)
+        app.MapPost("/api/books/me/{bookId:guid}", Handle)
             .WithTags("Books")
             .WithName("AddBook")
             .RequireAuthorization();

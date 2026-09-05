@@ -1,10 +1,7 @@
 using System.Security.Claims;
-using System.Security.Cryptography;
 using BookShare.Domain.Abstractions;
-using BookShare.Domain.Enums;
 using BookShare.Domain.Models;
 using BookShare.Domain.ValueObject;
-using BookShare.Infrastructure.Postgres.Pdf;
 
 namespace BookShare.Core.Endpoints.Book.UploadBook;
 
@@ -14,20 +11,20 @@ public sealed class UploadBookHandler
     private readonly IUserBookRepository _userBooks;
     private readonly IBookFileStorage _fileStorage;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly PdfCoverGenerator _coverGenerator;
+    private readonly BookUploadPreparationService _preparationService;
 
     public UploadBookHandler(
         IBookRepository books,
         IUserBookRepository userBooks,
         IBookFileStorage fileStorage,
         IUnitOfWork unitOfWork,
-        PdfCoverGenerator coverGenerator)
+        BookUploadPreparationService preparationService)
     {
         _books = books;
         _userBooks = userBooks;
         _fileStorage = fileStorage;
         _unitOfWork = unitOfWork;
-        _coverGenerator = coverGenerator;
+        _preparationService = preparationService;
     }
 
     public async Task<UploadBookResult> HandleAsync(
@@ -41,84 +38,23 @@ public sealed class UploadBookHandler
         if (!Guid.TryParse(userIdValue, out var userId))
             throw new UnauthorizedAccessException();
 
-        if (request.File is null || request.File.Length == 0)
-            throw new InvalidOperationException("File is empty.");
+        using var preparation =
+            await _preparationService.PrepareAsync(
+                request,
+                cancellationToken);
 
-        var format = BookFormatDetector.Detect(
-            request.File.FileName);
-
-        await using var stream = request.File.OpenReadStream();
-
-        var hashBytes = await SHA256.HashDataAsync(
-            stream,
-            cancellationToken);
-
-        var fileHash = FileHash.Create(
-            Convert.ToHexString(hashBytes));
-
-        var existingBook = await _books.FindByFileHashAsync(
-            fileHash,
-            cancellationToken);
+        var existingBook =
+            await _books.FindByFileHashAsync(
+                preparation.FileHash,
+                cancellationToken);
 
         if (existingBook is not null)
         {
-            if (existingBook.CoverKey is null)
-            {
-                stream.Position = 0;
-
-                await using var generatedCover =
-                    _coverGenerator.Generate(stream);
-
-                var generatedCoverKey =
-                    await _fileStorage.UploadCoverAsync(
-                        generatedCover,
-                        existingBook.Id,
-                        cancellationToken);
-
-                existingBook.SetCoverKey(
-                    CoverKey.Create(generatedCoverKey));
-
-                await _unitOfWork.SaveChangesAsync(
-                    cancellationToken);
-            }
-
-            var alreadyAdded = await _userBooks.ExistsAsync(
+            return await HandleExistingBookAsync(
+                existingBook,
                 userId,
-                existingBook.Id,
                 cancellationToken);
-
-            if (alreadyAdded)
-            {
-                return new UploadBookResult(
-                    existingBook.Id,
-                    BookCreated: false,
-                    UserBookCreated: false);
-            }
-
-            var userBook = new UserBook(
-                userId,
-                existingBook.Id);
-
-            await _userBooks.AddAsync(
-                userBook,
-                cancellationToken);
-
-            await _unitOfWork.SaveChangesAsync(
-                cancellationToken);
-
-            return new UploadBookResult(
-                existingBook.Id,
-                BookCreated: false,
-                UserBookCreated: true);
         }
-
-        stream.Position = 0;
-
-        var fileKey = await _fileStorage.UploadAsync(
-            stream,
-            request.File.FileName,
-            request.File.ContentType,
-            cancellationToken);
 
         var book = new Domain.Models.Book(
             BookTitle.Create(request.Title),
@@ -127,57 +63,37 @@ public sealed class UploadBookHandler
             null,
             userId);
 
+        await using var bookStream =
+            request.File.OpenReadStream();
+
+        var fileKey =
+            await _fileStorage.UploadAsync(
+                bookStream,
+                request.File.FileName,
+                request.File.ContentType,
+                cancellationToken);
+
         var bookFile = new BookFile(
             book.Id,
-            format,
+            preparation.Format,
             FileKey.Create(fileKey),
-            fileHash,
+            preparation.FileHash,
             request.File.Length);
 
         book.AddFile(bookFile);
 
-        CoverKey coverKey;
+        preparation.CoverStream.Position = 0;
 
-        if (request.Cover is not null &&
-            request.Cover.Length > 0)
-        {
-            await using var coverStream =
-                request.Cover.OpenReadStream();
+        var coverKey =
+            await _fileStorage.UploadCoverAsync(
+                preparation.CoverStream,
+                book.Id,
+                cancellationToken);
 
-            var uploadedCoverKey =
-                await _fileStorage.UploadCoverAsync(
-                    coverStream,
-                    book.Id,
-                    cancellationToken);
+        book.SetCoverKey(
+            CoverKey.Create(coverKey));
 
-            coverKey = CoverKey.Create(
-                uploadedCoverKey);
-        }
-        else
-        {
-            if (format != BookFormat.Pdf)
-            {
-                throw new InvalidOperationException(
-                    $"Для формата {format} необходимо загрузить обложку.");
-            }
-
-            stream.Position = 0;
-
-            await using var generatedCover =
-                _coverGenerator.Generate(stream);
-
-            var generatedCoverKey =
-                await _fileStorage.UploadCoverAsync(
-                    generatedCover,
-                    book.Id,
-                    cancellationToken);
-
-            coverKey = CoverKey.Create(generatedCoverKey);
-        }
-
-        book.SetCoverKey(coverKey);
-
-        var userBookLink = new UserBook(
+        var userBook = new UserBook(
             userId,
             book.Id);
 
@@ -186,7 +102,7 @@ public sealed class UploadBookHandler
             cancellationToken);
 
         await _userBooks.AddAsync(
-            userBookLink,
+            userBook,
             cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(
@@ -195,6 +111,42 @@ public sealed class UploadBookHandler
         return new UploadBookResult(
             book.Id,
             BookCreated: true,
+            UserBookCreated: true);
+    }
+
+    private async Task<UploadBookResult> HandleExistingBookAsync(
+        Domain.Models.Book existingBook,
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var alreadyAdded =
+            await _userBooks.ExistsAsync(
+                userId,
+                existingBook.Id,
+                cancellationToken);
+
+        if (alreadyAdded)
+        {
+            return new UploadBookResult(
+                existingBook.Id,
+                BookCreated: false,
+                UserBookCreated: false);
+        }
+
+        var userBook = new UserBook(
+            userId,
+            existingBook.Id);
+
+        await _userBooks.AddAsync(
+            userBook,
+            cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(
+            cancellationToken);
+
+        return new UploadBookResult(
+            existingBook.Id,
+            BookCreated: false,
             UserBookCreated: true);
     }
 }
