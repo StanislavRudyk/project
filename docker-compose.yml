@@ -57,6 +57,7 @@ services:
       Jwt__SecretKey: ${JWT_SECRET_KEY}
       
       Minio__Endpoint: minio:9000
+      Minio__PublicEndpoint: localhost:9000
       Minio__AccessKey: ${MINIO_ROOT_USER:-bookshare}
       Minio__SecretKey: ${MINIO_ROOT_PASSWORD:-bookshare_password}
       Minio__BucketName: bookshare
@@ -64,7 +65,7 @@ services:
 
     ports:
       - "5000:8080"
-
+      
   frontend:
     build:
       context: ./frontend
